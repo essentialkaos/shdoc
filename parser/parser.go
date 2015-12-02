@@ -97,15 +97,15 @@ func (d *Document) IsValid() bool {
 		return false
 	}
 
-	if d.Constants != nil {
+	if d.Constants != nil && len(d.Constants) != 0 {
 		return true
 	}
 
-	if d.Variables != nil {
+	if d.Variables != nil && len(d.Variables) != 0 {
 		return true
 	}
 
-	if d.Methods != nil {
+	if d.Methods != nil && len(d.Methods) != 0 {
 		return true
 	}
 
@@ -114,92 +114,164 @@ func (d *Document) IsValid() bool {
 
 // HasAbout return true if about is present
 func (d *Document) HasAbout() bool {
+	if d == nil {
+		return false
+	}
+
 	return d.About != nil
 }
 
 // HasConstants return true if doc has constants info
 func (d *Document) HasConstants() bool {
+	if d == nil {
+		return false
+	}
+
 	return d.Constants != nil
 }
 
 // HasVariables return true if doc has global variables info
 func (d *Document) HasVariables() bool {
+	if d == nil {
+		return false
+	}
+
 	return d.Variables != nil
 }
 
 // HasMethods return true if doc has methods info
 func (d *Document) HasMethods() bool {
+	if d == nil {
+		return false
+	}
+
 	return d.Methods != nil
 }
 
 // TypeDesc return type description
 func (a *Argument) TypeName(mod int) string {
+	if a == nil {
+		return ""
+	}
+
 	return getTypeName(a.Type, mod)
 }
 
 // IsString return true if type is string
 func (a *Argument) IsString() bool {
+	if a == nil {
+		return false
+	}
+
 	return a.Type == VAR_TYPE_STRING
 }
 
 // IsNumber return true if type is number
 func (a *Argument) IsNumber() bool {
+	if a == nil {
+		return false
+	}
+
 	return a.Type == VAR_TYPE_NUMBER
 }
 
 // IsBoolean return true if type is boolean
 func (a *Argument) IsBoolean() bool {
+	if a == nil {
+		return false
+	}
+
 	return a.Type == VAR_TYPE_BOOLEAN
 }
 
 // IsUnknown return true if type is unknown
 func (a *Argument) IsUnknown() bool {
+	if a == nil {
+		return false
+	}
+
 	return a.Type == VAR_TYPE_UKNOWN
 }
 
 // TypeDesc return type description
 func (v *Variable) TypeName(mod int) string {
+	if v == nil {
+		return ""
+	}
+
 	return getTypeName(v.Type, mod)
 }
 
 // IsString return true if type is string
 func (v *Variable) IsString() bool {
+	if v == nil {
+		return false
+	}
+
 	return v.Type == VAR_TYPE_STRING
 }
 
 // IsNumber return true if type is number
 func (v *Variable) IsNumber() bool {
+	if v == nil {
+		return false
+	}
+
 	return v.Type == VAR_TYPE_NUMBER
 }
 
 // IsBoolean return true if type is boolean
 func (v *Variable) IsBoolean() bool {
+	if v == nil {
+		return false
+	}
+
 	return v.Type == VAR_TYPE_BOOLEAN
 }
 
 // IsUnknown return true if type is unknown
 func (v *Variable) IsUnknown() bool {
+	if v == nil {
+		return false
+	}
+
 	return v.Type == VAR_TYPE_UKNOWN
 }
 
 // UnitedDesc return united description string
 func (v *Variable) UnitedDesc() string {
-	return strings.TrimRight(strings.Join(v.Desc, " "), " ")
+	if v == nil {
+		return ""
+	}
+
+	return mergeDesc(v.Desc)
 }
 
 // HasArguments return true if method has arguments
 func (m *Method) HasArguments() bool {
+	if m == nil {
+		return false
+	}
+
 	return m.Arguments != nil
 }
 
 // HasEcho return true if method echoed some data
 func (m *Method) HasEcho() bool {
+	if m == nil {
+		return false
+	}
+
 	return m.ResultEcho != nil
 }
 
 // UnitedDesc return united description string
 func (m *Method) UnitedDesc() string {
-	return strings.TrimRight(strings.Join(m.Desc, " "), " ")
+	if m == nil {
+		return ""
+	}
+
+	return mergeDesc(m.Desc)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -238,7 +310,7 @@ func Parse(file string) (*Document, []error) {
 
 		if line == "" {
 			if buffer != nil && !doc.IsValid() {
-				doc.About = buffer
+				doc.About = getCleanData(buffer)
 			}
 
 			buffer = nil
@@ -246,6 +318,10 @@ func Parse(file string) (*Document, []error) {
 		}
 
 		if strings.Trim(line, "#") == "" {
+			if buffer != nil {
+				buffer = append(buffer, "")
+			}
+
 			continue
 		}
 
@@ -266,7 +342,10 @@ func Parse(file string) (*Document, []error) {
 			m := parseMethodComment(name, buffer)
 			m.Line = lineNum
 
-			doc.Methods = append(doc.Methods, m)
+			// Methods MUST have description
+			if len(m.Desc) != 0 {
+				doc.Methods = append(doc.Methods, m)
+			}
 
 			buffer = nil
 
@@ -275,10 +354,13 @@ func Parse(file string) (*Document, []error) {
 
 			v.Line = lineNum
 
-			if t == ENT_TYPE_VARIABLE {
-				doc.Variables = append(doc.Variables, v)
-			} else {
-				doc.Constants = append(doc.Constants, v)
+			// Variables MUST have description
+			if len(v.Desc) != 0 {
+				if t == ENT_TYPE_VARIABLE {
+					doc.Variables = append(doc.Variables, v)
+				} else {
+					doc.Constants = append(doc.Constants, v)
+				}
 			}
 
 			buffer = nil
@@ -380,7 +462,7 @@ func parseMethodComment(name string, data []string) *Method {
 				method.Desc = extractMethodDesc(data, index)
 			}
 
-			method.Example = data[index+1:]
+			method.Example = getCleanData(data[index+1:])
 			break // Example is last part of comment
 		}
 	}
@@ -392,12 +474,13 @@ func parseMethodComment(name string, data []string) *Method {
 	return method
 }
 
+// extractMethodDesc return description from all comment data
 func extractMethodDesc(data []string, index int) []string {
-	if data[index] == "" {
-		return data[:index-1]
+	if len(data) <= index {
+		return getCleanData(data[:])
 	}
 
-	return data[:index]
+	return getCleanData(data[:index])
 }
 
 // parseArgumentComment method parse given comment data and return
@@ -487,20 +570,68 @@ func getVariableType(data []string) ([]string, VariableType) {
 		result = append(result, line)
 	}
 
-	return result, resultType
+	return getCleanData(result), resultType
 }
 
+// getTypeName return variable type name
 func getTypeName(t VariableType, mod int) string {
-	mod = mathutil.Between(mod, 0, 3)
+	mod = mathutil.Between(mod, 0, 4)
 
 	switch t {
 	case VAR_TYPE_STRING:
-		return []string{"String", "string", "STRING", "S"}[mod]
+		return []string{"String", "string", "STRING", "S", "s"}[mod]
 	case VAR_TYPE_NUMBER:
-		return []string{"Number", "number", "NUMBER", "N"}[mod]
+		return []string{"Number", "number", "NUMBER", "N", "n"}[mod]
 	case VAR_TYPE_BOOLEAN:
-		return []string{"Boolean", "boolean", "BOOLEAN", "B"}[mod]
+		return []string{"Boolean", "boolean", "BOOLEAN", "B", "b"}[mod]
 	default:
 		return ""
 	}
+}
+
+// getCleanData return removes empty lines and whitespaces at the
+// end of the line
+func getCleanData(data []string) []string {
+	if len(data) == 0 {
+		return data
+	}
+
+	var result []string
+
+	lastNonEmptyIndex := 0
+
+	// Search index of last non empty line
+	for index, line := range data {
+		if line != "" {
+			lastNonEmptyIndex = index
+		}
+	}
+
+	// Make result slice with non empty lines without whitespaces
+	// at end of the line
+	for i := 0; i <= lastNonEmptyIndex; i++ {
+		result = append(result, strings.TrimRight(data[i], " "))
+	}
+
+	return result
+}
+
+// mergeDesc merge description lines to one string
+func mergeDesc(data []string) string {
+	var result string
+	var dataLen = len(data)
+
+	for index, line := range data {
+		if line == "" {
+			continue
+		}
+
+		result += line
+
+		if index < dataLen-1 {
+			result += " "
+		}
+	}
+
+	return result
 }
