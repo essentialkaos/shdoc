@@ -10,14 +10,14 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700|Roboto+Mono' rel='stylesheet' type='text/css'>
 
     <style type="text/css">
-      html, body {font-family: 'Roboto', sans-serif; height:100%; padding:0; margin:0; color: #222 }
+      html, body {font-family: 'Roboto', Verdana, sans-serif; height:100%; padding:0; margin:0; color: #222 }
       h1, h2, h3, h4, h5, h6 { font-weight: 100; color: #666; padding-top: 16px }
       h1 { border-bottom: 1px #DDD solid; padding-bottom: 8px }
       code, #code { font-family: 'Roboto Mono', monospace }
       p { position: relative; }
-      p::before { content: attr(data-loc); position: absolute; right: 100%; margin-right: 12px; margin-top: 2px; font-size: 80%; color: #AAA; }
+      p::before { content: attr(data-loc); position: absolute; right: 100%; margin-right: 12px; margin-top: 2px; font-size: 80%; color: #AAA }
       #doc { width:800px; display:block; margin-left:auto; margin-right:auto; padding:16px 56px 96px }
-      .badge { font-size: 60%; font-weight: 700; vertical-align: middle; color: #FFF; padding: 2px 4px 2px 4px; border-radius: 4px; }
+      .badge { font-size: 60%; font-weight: 700; vertical-align: middle; color: #FFF; padding: 2px 4px 2px 4px; border-radius: 4px }
       .number { background-color: #DEAF57 }
       .string { background-color: #5598E2 }
       .boolean { background-color: #50C449 }
@@ -27,7 +27,7 @@
       .index { padding-left: 24px; color: #888 }
       .optional { background-color: #BBB }
       #footer { font-size: 80%; text-align: center; color: #999 }
-      #footer a { color: #666; }
+      #footer a { color: #666 }
     </style>
   </head>
   <body>
