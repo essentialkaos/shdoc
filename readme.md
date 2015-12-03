@@ -8,6 +8,10 @@ Tool for viewing and exporting docs for shell scripts.
 go get github.com/essentialkaos/shdoc
 ````
 
+#### Prebuilt binaries
+
+You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.io/shdoc/).
+
 ### Test & Coverage Status
 
 | Branch | TravisCI | CodeCov |

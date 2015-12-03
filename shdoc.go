@@ -26,14 +26,14 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.1.1"
+	VER  = "0.1.2"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
 const (
-	ARG_FORMAT   = "f:format"
 	ARG_OUTPUT   = "o:output"
 	ARG_TEMPLATE = "t:template"
+	ARG_NAME     = "n:name"
 	ARG_NO_COLOR = "nc:no-color"
 	ARG_HELP     = "h:help"
 	ARG_VER      = "v:version"
@@ -44,6 +44,7 @@ const (
 var argMap = arg.Map{
 	ARG_OUTPUT:   &arg.V{},
 	ARG_TEMPLATE: &arg.V{Value: "/usr/local/share/shdoc/templates/markdown.tpl"},
+	ARG_NAME:     &arg.V{},
 	ARG_NO_COLOR: &arg.V{Type: arg.BOOL},
 	ARG_HELP:     &arg.V{Type: arg.BOOL, Alias: "u:usage"},
 	ARG_VER:      &arg.V{Type: arg.BOOL, Alias: "ver"},
@@ -121,6 +122,10 @@ func process(file string, pattern string) {
 	if !doc.IsValid() {
 		fmtc.Printf("{y}File %s doesn't contains documentation.{!}\n", file)
 		os.Exit(2)
+	}
+
+	if arg.GetS(ARG_NAME) != "" {
+		doc.Title = arg.GetS(ARG_NAME)
 	}
 
 	if arg.GetS(ARG_OUTPUT) == "" {
@@ -336,12 +341,25 @@ func showUsage() {
 
 	info.AddOption(ARG_OUTPUT, "Path to output file", "file")
 	info.AddOption(ARG_TEMPLATE, "Path to template file", "file")
+	info.AddOption(ARG_NAME, "Overwrite default name", "name")
 	info.AddOption(ARG_NO_COLOR, "Disable colors in output")
 	info.AddOption(ARG_HELP, "Show this help message")
 	info.AddOption(ARG_VER, "Show version")
 
-	info.AddExample("script.sh", "Parse shell script and show docs in console")
-	info.AddExample("script.sh -f markdown -o my_script.md", "Parse shell script and save docs in markdown format")
+	info.AddExample(
+		"script.sh",
+		"Parse shell script and show docs in console",
+	)
+
+	info.AddExample(
+		"script.sh -t path/to/template.tpl -o my_script.md",
+		"Parse shell script and save docs using given export template",
+	)
+
+	info.AddExample(
+		"script.sh someEntity",
+		"Parse shell script and show docs for some constant, variable or method",
+	)
 
 	info.Render()
 }
