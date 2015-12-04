@@ -265,6 +265,15 @@ func (m *Method) HasEcho() bool {
 	return m.ResultEcho != nil
 }
 
+// HasExample return true if method has code usage example
+func (m *Method) HasExample() bool {
+	if m == nil {
+		return false
+	}
+
+	return m.Example != nil
+}
+
 // UnitedDesc return united description string
 func (m *Method) UnitedDesc() string {
 	if m == nil {

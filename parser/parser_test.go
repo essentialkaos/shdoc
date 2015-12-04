@@ -223,6 +223,7 @@ func (s *ParseSuite) TestErrors(c *C) {
 
 	c.Assert(m.HasArguments(), Equals, false)
 	c.Assert(m.HasEcho(), Equals, false)
+	c.Assert(m.HasExample(), Equals, false)
 	c.Assert(m.UnitedDesc(), Equals, "")
 }
 
@@ -446,6 +447,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[0].Line, Equals, 65)
 	c.Assert(doc.Methods[0].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[0].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[0].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[0].UnitedDesc(), Equals, "This is desc for method #1. Second line of description. Third line of description. Fourth line of description.")
 
 	c.Assert(doc.Methods[1], NotNil)
@@ -528,6 +530,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].Line, Equals, 84)
 	c.Assert(doc.Methods[1].HasArguments(), Equals, true)
 	c.Assert(doc.Methods[1].HasEcho(), Equals, true)
+	c.Assert(doc.Methods[1].HasExample(), Equals, true)
 	c.Assert(doc.Methods[1].UnitedDesc(), Equals, "This is desc for method #2.")
 
 	c.Assert(doc.Methods[2], NotNil)
@@ -546,6 +549,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[2].Line, Equals, 95)
 	c.Assert(doc.Methods[2].HasArguments(), Equals, true)
 	c.Assert(doc.Methods[2].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[2].HasExample(), Equals, false)
 	c.Assert(doc.Methods[2].UnitedDesc(), Equals, "This is desc for method #3.")
 
 	c.Assert(doc.Methods[3], NotNil)
@@ -558,6 +562,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[3].Line, Equals, 100)
 	c.Assert(doc.Methods[3].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[3].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[3].HasExample(), Equals, false)
 	c.Assert(doc.Methods[3].UnitedDesc(), Equals, "This is desc for method #4.")
 
 	c.Assert(doc.Methods[4], NotNil)
@@ -570,6 +575,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[4].Line, Equals, 106)
 	c.Assert(doc.Methods[4].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[4].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[4].HasExample(), Equals, false)
 	c.Assert(doc.Methods[4].UnitedDesc(), Equals, "This is desc for method #5.")
 
 	c.Assert(doc.Methods[5], NotNil)
@@ -582,6 +588,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[5].Line, Equals, 112)
 	c.Assert(doc.Methods[5].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[5].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[5].HasExample(), Equals, false)
 	c.Assert(doc.Methods[5].UnitedDesc(), Equals, "This is desc for method #6.")
 
 	c.Assert(doc.Methods[6], NotNil)
@@ -600,6 +607,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[6].Line, Equals, 119)
 	c.Assert(doc.Methods[6].HasArguments(), Equals, true)
 	c.Assert(doc.Methods[6].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[6].HasExample(), Equals, false)
 	c.Assert(doc.Methods[6].UnitedDesc(), Equals, "This is desc for method #7.")
 
 	c.Assert(doc.Methods[7], NotNil)
@@ -613,6 +621,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[7].Line, Equals, 127)
 	c.Assert(doc.Methods[7].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[7].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[7].HasExample(), Equals, true)
 	c.Assert(doc.Methods[7].UnitedDesc(), Equals, "This is desc for method #8.")
 
 	c.Assert(doc.Methods[8], NotNil)
@@ -625,5 +634,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[8].Line, Equals, 133)
 	c.Assert(doc.Methods[8].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[8].HasEcho(), Equals, false)
+	c.Assert(doc.Methods[8].HasExample(), Equals, false)
 	c.Assert(doc.Methods[8].UnitedDesc(), Equals, "This is desc for method #9.")
+
 }
