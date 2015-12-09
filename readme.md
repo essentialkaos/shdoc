@@ -8,6 +8,19 @@ Tool for viewing and exporting docs for shell scripts.
 go get github.com/essentialkaos/shdoc
 ````
 
+#### Usage
+
+    Usage: shdoc <options> file
+    
+    Options:
+    
+      --output, -o file      Path to output file
+      --template, -t file    Path to template file
+      --name, -n name        Overwrite default name
+      --no-color, -nc        Disable colors in output
+      --help, -h             Show this help message
+      --version, -v          Show version
+
 #### Prebuilt binaries
 
 You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.io/shdoc/).
