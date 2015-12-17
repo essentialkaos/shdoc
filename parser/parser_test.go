@@ -646,7 +646,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[8].ResultCode, Equals, false)
 	c.Assert(doc.Methods[8].ResultEcho, IsNil)
 	c.Assert(doc.Methods[8].Example, HasLen, 0)
-	c.Assert(doc.Methods[8].Line, Equals, 142)
+	c.Assert(doc.Methods[8].Line, Equals, 141)
 	c.Assert(doc.Methods[8].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[8].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[8].HasExample(), Equals, false)
