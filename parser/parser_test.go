@@ -46,6 +46,10 @@ CONST_5=""
 # Constant #6 with type (Boolean)
 CONST_6=""
 
+# -
+# Private constant
+CONST_7=""
+
 ###############################################################################
 
 # Variable #1 without type
@@ -69,6 +73,10 @@ var_6=""
 
 # Variable #7 without value
 var_7=
+
+# -
+# Private variable
+var_8=""
 
 ###############################################################################
 
@@ -159,6 +167,13 @@ method10() {
 
 # Echo: Magic value (Number)
 method11() {
+  stub=1 
+}
+
+# -
+#
+# This is private method
+method12() {
   stub=1 
 }
 `
@@ -350,7 +365,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[0].Desc, DeepEquals, []string{"Variable #1 without type", "Second line of description"})
 	c.Assert(doc.Variables[0].Type, Equals, VariableType(VAR_TYPE_STRING))
 	c.Assert(doc.Variables[0].Value, Equals, "\"\"")
-	c.Assert(doc.Variables[0].Line, Equals, 35)
+	c.Assert(doc.Variables[0].Line, Equals, 39)
 	c.Assert(doc.Variables[0].UnitedDesc(), Equals, "Variable #1 without type Second line of description")
 	c.Assert(doc.Variables[0].IsString(), Equals, true)
 	c.Assert(doc.Variables[0].IsNumber(), Equals, false)
@@ -367,7 +382,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[1].Desc, DeepEquals, []string{"Variable #2 without type"})
 	c.Assert(doc.Variables[1].Type, Equals, VariableType(VAR_TYPE_NUMBER))
 	c.Assert(doc.Variables[1].Value, Equals, "1")
-	c.Assert(doc.Variables[1].Line, Equals, 38)
+	c.Assert(doc.Variables[1].Line, Equals, 42)
 	c.Assert(doc.Variables[1].UnitedDesc(), Equals, "Variable #2 without type")
 	c.Assert(doc.Variables[1].IsString(), Equals, false)
 	c.Assert(doc.Variables[1].IsNumber(), Equals, true)
@@ -384,7 +399,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[2].Desc, DeepEquals, []string{"Variable #3 without type"})
 	c.Assert(doc.Variables[2].Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Variables[2].Value, Equals, "true")
-	c.Assert(doc.Variables[2].Line, Equals, 41)
+	c.Assert(doc.Variables[2].Line, Equals, 45)
 	c.Assert(doc.Variables[2].UnitedDesc(), Equals, "Variable #3 without type")
 	c.Assert(doc.Variables[2].IsString(), Equals, false)
 	c.Assert(doc.Variables[2].IsNumber(), Equals, false)
@@ -401,28 +416,28 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[3].Desc, DeepEquals, []string{"Variable #4 with type"})
 	c.Assert(doc.Variables[3].Type, Equals, VariableType(VAR_TYPE_STRING))
 	c.Assert(doc.Variables[3].Value, Equals, "\"\"")
-	c.Assert(doc.Variables[3].Line, Equals, 44)
+	c.Assert(doc.Variables[3].Line, Equals, 48)
 
 	c.Assert(doc.Variables[4], NotNil)
 	c.Assert(doc.Variables[4].Name, Equals, "var_5")
 	c.Assert(doc.Variables[4].Desc, DeepEquals, []string{"Variable #5 with type"})
 	c.Assert(doc.Variables[4].Type, Equals, VariableType(VAR_TYPE_NUMBER))
 	c.Assert(doc.Variables[4].Value, Equals, "\"\"")
-	c.Assert(doc.Variables[4].Line, Equals, 47)
+	c.Assert(doc.Variables[4].Line, Equals, 51)
 
 	c.Assert(doc.Variables[5], NotNil)
 	c.Assert(doc.Variables[5].Name, Equals, "var_6")
 	c.Assert(doc.Variables[5].Desc, DeepEquals, []string{"Variable #6 with type"})
 	c.Assert(doc.Variables[5].Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Variables[5].Value, Equals, "\"\"")
-	c.Assert(doc.Variables[5].Line, Equals, 50)
+	c.Assert(doc.Variables[5].Line, Equals, 54)
 
 	c.Assert(doc.Variables[6], NotNil)
 	c.Assert(doc.Variables[6].Name, Equals, "var_7")
 	c.Assert(doc.Variables[6].Desc, DeepEquals, []string{"Variable #7 without value"})
 	c.Assert(doc.Variables[6].Type, Equals, VariableType(VAR_TYPE_UKNOWN))
 	c.Assert(doc.Variables[6].Value, Equals, "")
-	c.Assert(doc.Variables[6].Line, Equals, 53)
+	c.Assert(doc.Variables[6].Line, Equals, 57)
 	c.Assert(doc.Variables[6].TypeName(0), Equals, "")
 	c.Assert(doc.Variables[6].TypeName(1), Equals, "")
 	c.Assert(doc.Variables[6].TypeName(2), Equals, "")
@@ -444,7 +459,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[0].ResultCode, Equals, false)
 	c.Assert(doc.Methods[0].ResultEcho, IsNil)
 	c.Assert(doc.Methods[0].Example, HasLen, 0)
-	c.Assert(doc.Methods[0].Line, Equals, 65)
+	c.Assert(doc.Methods[0].Line, Equals, 73)
 	c.Assert(doc.Methods[0].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[0].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[0].HasEcho(), Equals, false)
@@ -527,7 +542,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].Example[0], Equals, "if [[ -f $file ]] ; then")
 	c.Assert(doc.Methods[1].Example[1], Equals, "  method2 123")
 	c.Assert(doc.Methods[1].Example[2], Equals, "fi")
-	c.Assert(doc.Methods[1].Line, Equals, 84)
+	c.Assert(doc.Methods[1].Line, Equals, 92)
 	c.Assert(doc.Methods[1].HasArguments(), Equals, true)
 	c.Assert(doc.Methods[1].HasEcho(), Equals, true)
 	c.Assert(doc.Methods[1].HasExample(), Equals, true)
@@ -546,7 +561,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[2].ResultCode, Equals, false)
 	c.Assert(doc.Methods[2].ResultEcho, IsNil)
 	c.Assert(doc.Methods[2].Example, HasLen, 0)
-	c.Assert(doc.Methods[2].Line, Equals, 95)
+	c.Assert(doc.Methods[2].Line, Equals, 103)
 	c.Assert(doc.Methods[2].HasArguments(), Equals, true)
 	c.Assert(doc.Methods[2].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[2].HasExample(), Equals, false)
@@ -559,7 +574,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[3].ResultCode, Equals, false)
 	c.Assert(doc.Methods[3].ResultEcho, IsNil)
 	c.Assert(doc.Methods[3].Example, HasLen, 0)
-	c.Assert(doc.Methods[3].Line, Equals, 100)
+	c.Assert(doc.Methods[3].Line, Equals, 108)
 	c.Assert(doc.Methods[3].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[3].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[3].HasExample(), Equals, false)
@@ -572,7 +587,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[4].ResultCode, Equals, false)
 	c.Assert(doc.Methods[4].ResultEcho, IsNil)
 	c.Assert(doc.Methods[4].Example, HasLen, 0)
-	c.Assert(doc.Methods[4].Line, Equals, 106)
+	c.Assert(doc.Methods[4].Line, Equals, 114)
 	c.Assert(doc.Methods[4].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[4].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[4].HasExample(), Equals, false)
@@ -585,7 +600,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[5].ResultCode, Equals, false)
 	c.Assert(doc.Methods[5].ResultEcho, IsNil)
 	c.Assert(doc.Methods[5].Example, HasLen, 0)
-	c.Assert(doc.Methods[5].Line, Equals, 112)
+	c.Assert(doc.Methods[5].Line, Equals, 120)
 	c.Assert(doc.Methods[5].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[5].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[5].HasExample(), Equals, false)
@@ -604,7 +619,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[6].ResultCode, Equals, false)
 	c.Assert(doc.Methods[6].ResultEcho, IsNil)
 	c.Assert(doc.Methods[6].Example, HasLen, 0)
-	c.Assert(doc.Methods[6].Line, Equals, 119)
+	c.Assert(doc.Methods[6].Line, Equals, 127)
 	c.Assert(doc.Methods[6].HasArguments(), Equals, true)
 	c.Assert(doc.Methods[6].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[6].HasExample(), Equals, false)
@@ -618,7 +633,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[7].ResultEcho, IsNil)
 	c.Assert(doc.Methods[7].Example, HasLen, 1)
 	c.Assert(doc.Methods[7].Example[0], Equals, "method8 123")
-	c.Assert(doc.Methods[7].Line, Equals, 127)
+	c.Assert(doc.Methods[7].Line, Equals, 135)
 	c.Assert(doc.Methods[7].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[7].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[7].HasExample(), Equals, true)
@@ -631,7 +646,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[8].ResultCode, Equals, false)
 	c.Assert(doc.Methods[8].ResultEcho, IsNil)
 	c.Assert(doc.Methods[8].Example, HasLen, 0)
-	c.Assert(doc.Methods[8].Line, Equals, 133)
+	c.Assert(doc.Methods[8].Line, Equals, 142)
 	c.Assert(doc.Methods[8].HasArguments(), Equals, false)
 	c.Assert(doc.Methods[8].HasEcho(), Equals, false)
 	c.Assert(doc.Methods[8].HasExample(), Equals, false)

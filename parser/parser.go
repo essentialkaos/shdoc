@@ -17,6 +17,7 @@ import (
 
 	"github.com/essentialkaos/ek/fsutil"
 	"github.com/essentialkaos/ek/mathutil"
+	"github.com/essentialkaos/ek/sliceutil"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -349,6 +350,12 @@ func Parse(file string) (*Document, []error) {
 		switch t {
 		case ENT_TYPE_METHOD:
 			m := parseMethodComment(name, buffer)
+
+			if m == nil {
+				buffer = nil
+				continue
+			}
+
 			m.Line = lineNum
 
 			// Methods MUST have description
@@ -360,6 +367,11 @@ func Parse(file string) (*Document, []error) {
 
 		case ENT_TYPE_VARIABLE, ENT_TYPE_CONSTANT:
 			v := parseVariableComment(name, value, buffer)
+
+			if v == nil {
+				buffer = nil
+				continue
+			}
 
 			v.Line = lineNum
 
@@ -405,6 +417,10 @@ func parseEntity(data string) (EntityType, string, string) {
 // parseVariableComment method parse variable comment data and return
 // variable struct
 func parseVariableComment(name, value string, data []string) *Variable {
+	if sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
+		return nil
+	}
+
 	variable := &Variable{
 		Name:  name,
 		Value: value,
@@ -425,6 +441,10 @@ func parseVariableComment(name, value string, data []string) *Variable {
 // parseMethodComment method parse method comment data and return
 // method struct
 func parseMethodComment(name string, data []string) *Method {
+	if sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
+		return nil
+	}
+
 	method := &Method{Name: name}
 
 	for index, line := range data {
