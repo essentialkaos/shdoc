@@ -417,7 +417,7 @@ func parseEntity(data string) (EntityType, string, string) {
 // parseVariableComment method parse variable comment data and return
 // variable struct
 func parseVariableComment(name, value string, data []string) *Variable {
-	if sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
+	if len(data) == 0 || sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 
@@ -441,7 +441,7 @@ func parseVariableComment(name, value string, data []string) *Variable {
 // parseMethodComment method parse method comment data and return
 // method struct
 func parseMethodComment(name string, data []string) *Method {
-	if sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
+	if len(data) == 0 || sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 
