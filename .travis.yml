@@ -1,0 +1,22 @@
+language: go
+go:
+  - 1.4.2
+  - 1.5.2
+  - tip
+
+os:
+  - linux
+  - osx
+
+sudo: false
+
+before_install:
+  - go get gopkg.in/check.v1
+  - go get github.com/essentialkaos/ek
+
+script:
+  - go test -coverprofile=coverage.txt -covermode=atomic ./parser
+  - go build shdoc.go
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
