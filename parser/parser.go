@@ -15,9 +15,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/essentialkaos/ek/fsutil"
-	"github.com/essentialkaos/ek/mathutil"
-	"github.com/essentialkaos/ek/sliceutil"
+	"pkg.re/essentialkaos/ek.v1/fsutil"
+	"pkg.re/essentialkaos/ek.v1/mathutil"
+	"pkg.re/essentialkaos/ek.v1/sliceutil"
+	"pkg.re/essentialkaos/ek.v1/strutil"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -373,6 +374,20 @@ func Parse(file string) (*Document, []error) {
 				continue
 			}
 
+			// Append multiline parts to value
+			if isMultilineValue(value) {
+			MULTIPART:
+				for scanner.Scan() {
+					valuePart := scanner.Text()
+
+					v.Value += valuePart
+
+					if strutil.Tail(valuePart, 1) == "\"" {
+						break MULTIPART
+					}
+				}
+			}
+
 			v.Line = lineNum
 
 			// Variables MUST have description
@@ -663,4 +678,13 @@ func mergeDesc(data []string) string {
 	}
 
 	return result
+}
+
+// isMultilineValue return true if value is multiline string
+func isMultilineValue(value string) bool {
+	if strutil.Head(value, 1) == "\"" && strutil.Tail(value, 1) != "\"" {
+		return true
+	}
+
+	return false
 }

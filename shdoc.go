@@ -13,11 +13,11 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/essentialkaos/ek/arg"
-	"github.com/essentialkaos/ek/fmtc"
-	"github.com/essentialkaos/ek/fmtutil"
-	"github.com/essentialkaos/ek/fsutil"
-	"github.com/essentialkaos/ek/usage"
+	"pkg.re/essentialkaos/ek.v1/arg"
+	"pkg.re/essentialkaos/ek.v1/fmtc"
+	"pkg.re/essentialkaos/ek.v1/fmtutil"
+	"pkg.re/essentialkaos/ek.v1/fsutil"
+	"pkg.re/essentialkaos/ek.v1/usage"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -26,7 +26,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.1.3"
+	VER  = "0.1.4"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
