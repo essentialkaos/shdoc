@@ -284,11 +284,11 @@ func renderMethod(m *Method, showExamples bool) {
 		for _, a := range m.Arguments {
 			switch {
 			case a.IsOptional:
-				fmtc.Printf("  {s}%s.{!} %s "+getVarTypeDesc(a.Type)+" {s}[Optional]{!}\n", a.Index, a.Desc)
+				fmtc.Printf("  {s}%2s.{!} %s "+getVarTypeDesc(a.Type)+" {s}[Optional]{!}\n", a.Index, a.Desc)
 			case a.IsWildcard:
-				fmtc.Printf("  {s}%s.{!} %s\n", a.Index, a.Desc)
+				fmtc.Printf("  {s}%2s.{!} %s\n", a.Index, a.Desc)
 			default:
-				fmtc.Printf("  {s}%s.{!} %s "+getVarTypeDesc(a.Type)+"\n", a.Index, a.Desc)
+				fmtc.Printf("  {s}%2s.{!} %s "+getVarTypeDesc(a.Type)+"\n", a.Index, a.Desc)
 			}
 		}
 	}
