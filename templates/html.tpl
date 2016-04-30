@@ -10,7 +10,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700|Roboto+Mono' rel='stylesheet' type='text/css'>
 
     <style type="text/css">
-      html, body {font-family: 'Roboto', Verdana, sans-serif; height:100%; padding:0; margin:0; color: #222 }
+      html, body {font-family: 'Roboto', Verdana, sans-serif; height: 100%; padding: 0; margin: 0; color: #222 }
       h1, h2, h3, h4, h5, h6 { font-weight: 100; color: #666; padding-top: 16px }
       h1 { border-bottom: 1px #DDD solid; padding-bottom: 8px }
       code { font-family: 'Roboto Mono', monospace }
@@ -18,7 +18,7 @@
       p { position: relative }
       p.toc { margin: 6px 0 6px 0; }
       p::before { content: attr(data-loc); position: absolute; right: 100%; margin-right: 12px; margin-top: 2px; font-size: 80%; color: #AAA }
-      div.doc { width:800px; display:block; margin-left:auto; margin-right:auto; padding:16px 56px 96px }
+      div.doc { width: 800px; display: block; margin-left: auto; margin-right: auto; padding-top: 32px }
       span.badge { font-size: 60%; font-weight: 700; vertical-align: middle; color: #FFF; padding: 2px 4px 2px 4px; border-radius: 4px }
       span.number { background-color: #DEAF57 }
       span.string { background-color: #5598E2 }
@@ -33,8 +33,8 @@
       span.title { margin-left: 24px; color: #888 }
       span.optional { background-color: #BBB }
       div.example { font-size: 80%; color: #444; margin-left: 24px; padding: 16px; border: 1px solid #CCC; border-radius: 4px; background-color: #f5f5f5; white-space:pre-wrap }
-      #footer { font-size: 80%; text-align: center; color: #999 }
-      #footer a { color: #666 }
+      p.footer { font-size: 80%; text-align: center; color: #999; padding: 64px 0 40px 0 }
+      p.footer a { color: #666 }
     </style>
   </head>
   <body>
@@ -112,6 +112,6 @@
       {{ end }}
       {{ end }}
     </div>
-    <p id="footer">Genereated by <a href="https://github.com/essentialkaos/shdoc">SHDoc</a><br/><br/><p>
+    <p class="footer">Genereated with ❤ by <a href="https://github.com/essentialkaos/shdoc">SHDoc</a><p>
   </body>
 </html>
