@@ -1,8 +1,8 @@
-# SHDoc [![Release](https://img.shields.io/github/release/essentialkaos/shdoc.svg)](https://github.com/essentialkaos/shdoc/releases/latest)
+## SHDoc [![Release](https://img.shields.io/github/release/essentialkaos/shdoc.svg)](https://github.com/essentialkaos/shdoc/releases/latest)
 
 Tool for viewing and exporting docs for shell scripts.
 
-### Installation
+#### Installation
 
 ````
 go get github.com/essentialkaos/shdoc
