@@ -2,6 +2,12 @@
 
 Tool for viewing and exporting docs for shell scripts.
 
+* [Installation](#installation)
+* [Usage](#usage)
+* [Test & Coverage Status](#test--coverage-status)
+* [Contributing](#contributing)
+* [License](#license)
+
 #### Installation
 
 ````
