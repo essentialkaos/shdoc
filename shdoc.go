@@ -280,14 +280,14 @@ func renderTemplate(doc *Document) {
 
 // renderConstant print constant info to console
 func renderConstant(c *Variable) {
-	fmtc.Printf("{s}%4d:{!} {m*}%s{!} {s}={!} %s\n", c.Line, c.Name, c.Value)
-	fmtc.Printf("      %s "+getVarTypeDesc(c.Type)+"\n", strings.Join(c.Desc, " "))
+	fmtc.Printf("{s}%4d:{!} {m*}%s{!} {s}={!} %s "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name, c.Value)
+	fmtc.Printf("      %s\n", c.UnitedDesc())
 }
 
 // renderMethod print variable info to console
 func renderVariable(v *Variable) {
-	fmtc.Printf("{s}%4d:{!} {c*}%s{!} {s}={!} %s\n", v.Line, v.Name, v.Value)
-	fmtc.Printf("      %s "+getVarTypeDesc(v.Type)+"\n", v.UnitedDesc())
+	fmtc.Printf("{s}%4d:{!} {c*}%s{!} {s}={!} %s "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name, v.Value)
+	fmtc.Printf("      %s\n", v.UnitedDesc())
 }
 
 // renderMethod print method info to console
