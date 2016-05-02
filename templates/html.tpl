@@ -10,41 +10,71 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700|Roboto+Mono' rel='stylesheet' type='text/css'>
 
     <style type="text/css">
-      html, body {font-family: 'Roboto', Verdana, sans-serif; height:100%; padding:0; margin:0; color: #222 }
+      html, body {font-family: 'Roboto', Verdana, sans-serif; height: 100%; padding: 0; margin: 0; color: #222 }
       h1, h2, h3, h4, h5, h6 { font-weight: 100; color: #666; padding-top: 16px }
       h1 { border-bottom: 1px #DDD solid; padding-bottom: 8px }
-      code, #code { font-family: 'Roboto Mono', monospace }
+      code { font-family: 'Roboto Mono', monospace }
       a { color: #222; text-decoration: none }
-      p { position: relative; }
+      p { position: relative }
+      p.toc { margin: 6px 0 6px 0; }
       p::before { content: attr(data-loc); position: absolute; right: 100%; margin-right: 12px; margin-top: 2px; font-size: 80%; color: #AAA }
-      #doc { width:800px; display:block; margin-left:auto; margin-right:auto; padding:16px 56px 96px }
-      .badge { font-size: 60%; font-weight: 700; vertical-align: middle; color: #FFF; padding: 2px 4px 2px 4px; border-radius: 4px }
-      .number { background-color: #DEAF57 }
-      .string { background-color: #5598E2 }
-      .boolean { background-color: #50C449 }
-      .equals { color: #888 }
-      .desc { color: #444 }
-      .variable { font-size: 80%; }
-      .title { margin-left: 24px; color: #888 }
-      .optional { background-color: #BBB }
-      .example { font-size: 80%; color: #444; margin-left: 24px; padding: 16px; border: 1px solid #CCC; border-radius: 4px; background-color: #f5f5f5; white-space:pre-wrap }
-      #footer { font-size: 80%; text-align: center; color: #999 }
-      #footer a { color: #666 }
+      div.doc { width: 800px; display: block; margin-left: auto; margin-right: auto; padding-top: 32px }
+      span.badge { font-size: 60%; font-weight: 700; vertical-align: middle; color: #FFF; padding: 2px 4px 2px 4px; border-radius: 4px }
+      span.number { background-color: #DEAF57 }
+      span.string { background-color: #5598E2 }
+      span.boolean { background-color: #50C449 }
+      span.dot { font-weight: bold; vertical-align: middle }
+      span.dot-number { color: #DEAF57 }
+      span.dot-string { color: #5598E2 }
+      span.dot-boolean { color: #50C449 }
+      span.equals { color: #888 }
+      span.desc { color: #444 }
+      span.variable { font-size: 80%; }
+      span.title { margin-left: 24px; color: #888 }
+      span.optional { background-color: #BBB }
+      div.example { font-size: 80%; color: #444; margin-left: 24px; padding: 16px; border: 1px solid #CCC; border-radius: 4px; background-color: #f5f5f5; white-space:pre-wrap }
+      p.footer { font-size: 80%; text-align: center; color: #999; padding: 64px 0 40px 0 }
+      p.footer a { color: #666 }
     </style>
   </head>
   <body>
-    <div id="doc">
+    <div class="doc">
       <h1>{{ .Title }}</h1>
       {{ if .HasAbout }}
       <h2>About</h3>
       {{ range .About }}<p>{{ . }}</p>{{ end }}
       {{ end }}
+
+      <!-- TOC -->
+
+      {{ if .HasConstants }}
+      <h3>Constants</h3>
+      {{ range .Constants }}
+      <p data-loc="{{ .Line }}" class="toc"><span><a href="#{{ .Line }}">{{ .Name }}</a></span> <span class="dot dot-{{ .TypeName 1 }}">•</span></p>
+      {{ end }}
+      {{ end }}
+
+      {{ if .HasVariables }}
+      <h3>Global Variables</h2>
+      {{ range .Variables }}
+      <p data-loc="{{ .Line }}" class="toc"><span><a href="#{{ .Line }}">{{ .Name }}</a></span> <span class="dot dot-{{ .TypeName 1 }}">•</span></p>
+      {{ end }}
+      {{ end }}
+
+      {{ if .HasMethods }}
+      <h3>Methods</h3>
+      {{ range .Methods }}
+      <p data-loc="{{ .Line }}" class="toc"><span><a href="#{{ .Line }}">{{ .Name }}</a></span></p>
+      {{ end }}
+      {{ end }}
+
+      <!-- DOCS -->
       
       {{ if .HasConstants }}
       <h2>Constants</h2>
       {{ range .Constants }}
       <p data-loc="{{ .Line }}">
-        <span class="code"><a name="{{ .Line }}" href="#{{ .Line }}">{{ .Name }}</a></span> <span class="code equals">=</span> <span class="code">{{ .Value }}</span> <span class="badge {{ .TypeName 1 }}">{{ .TypeName 2 }}</span><br/>
+        <span><a name="{{ .Line }}" href="#{{ .Line }}">{{ .Name }}</a></span> <span class="equals">=</span> <span>{{ .Value }}</span> <span class="badge {{ .TypeName 1 }}">{{ .TypeName 2 }}</span><br/>
         <span class="variable desc">{{ .UnitedDesc }}</span>
       </p>
       {{ end }}
@@ -54,7 +84,7 @@
       <h2>Global Variables</h2>
       {{ range .Variables }}
       <p data-loc="{{ .Line }}">
-        <span class="code"><a name="{{ .Line }}" href="#{{ .Line }}">{{ .Name }}</a></span> <span class="code equals">=</span> <span class="code">{{ .Value }}</span> <span class="badge {{ .TypeName 1 }}">{{ .TypeName 2 }}</span><br/>
+        <span><a name="{{ .Line }}" href="#{{ .Line }}">{{ .Name }}</a></span> <span class="equals">=</span> <span>{{ .Value }}</span> <span class="badge {{ .TypeName 1 }}">{{ .TypeName 2 }}</span><br/>
         <span class="variable desc">{{ .UnitedDesc }}</span>
       </p>
       {{ end }}
@@ -64,7 +94,7 @@
       <h2>Methods</h2>
       {{ range .Methods }}
       <p data-loc="{{ .Line }}">
-        <span class="code"><a name="{{ .Line }}" href="#{{ .Line }}">{{ .Name }}</a></span><span class="desc"> - {{ .UnitedDesc }}</span><br/>
+        <span><a name="{{ .Line }}" href="#{{ .Line }}">{{ .Name }}</a></span><span class="desc"> - {{ .UnitedDesc }}</span><br/>
   
         {{ if .HasArguments }}
         <br/>
@@ -82,6 +112,6 @@
       {{ end }}
       {{ end }}
     </div>
-    <p id="footer">Genereated by <a href="https://github.com/essentialkaos/shdoc">SHDoc</a><br/><br/><p>
+    <p class="footer">Genereated with ❤ by <a href="https://github.com/essentialkaos/shdoc">SHDoc</a><p>
   </body>
 </html>

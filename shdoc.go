@@ -26,7 +26,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.1.4"
+	VER  = "0.1.5"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -93,34 +93,34 @@ func main() {
 
 func process(file string, pattern string) {
 	if !fsutil.IsExist(file) {
-		fmtc.Printf("{r}File %s is not exist{!}\n", file)
+		printError("File %s is not exist", file)
 		os.Exit(1)
 	}
 
 	if !fsutil.IsReadable(file) {
-		fmtc.Printf("{r}File %s is not readable{!}\n", file)
+		printError("File %s is not readable", file)
 		os.Exit(1)
 	}
 
 	if !fsutil.IsNonEmpty(file) {
-		fmtc.Printf("{r}File %s is empty{!}\n", file)
+		printError("File %s is empty", file)
 		os.Exit(1)
 	}
 
 	doc, errs := Parse(file)
 
 	if len(errs) != 0 {
-		fmtc.Println("{r}Shell script docs parsing errors:{!}")
+		printError("Shell script docs parsing errors:")
 
-		for _, e := range errs {
-			fmtc.Printf("  {r}%s{!}\n", e.Error())
+		for _, err := range errs {
+			printError("  %s", err.Error())
 		}
 
 		os.Exit(1)
 	}
 
 	if !doc.IsValid() {
-		fmtc.Printf("{y}File %s doesn't contains documentation.{!}\n", file)
+		printWarn("File %s doesn't contains documentation", file)
 		os.Exit(2)
 	}
 
@@ -230,7 +230,7 @@ func simpleRender(doc *Document) {
 // renderTemplate read template and render to file
 func renderTemplate(doc *Document) {
 	if !fsutil.CheckPerms("FRS", arg.GetS(ARG_TEMPLATE)) {
-		fmtc.Printf("{r}Can't read template %s - file is not exist or empty.{!}\n", arg.GetS(ARG_TEMPLATE))
+		printError("Can't read template %s - file is not exist or empty.", arg.GetS(ARG_TEMPLATE))
 		os.Exit(1)
 	}
 
@@ -241,7 +241,8 @@ func renderTemplate(doc *Document) {
 	fd, err := os.OpenFile(arg.GetS(ARG_OUTPUT), os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
-		printErrorAndExit(err)
+		printError(err.Error())
+		os.Exit(1)
 	}
 
 	defer fd.Close()
@@ -249,7 +250,8 @@ func renderTemplate(doc *Document) {
 	tpl, err := ioutil.ReadFile(arg.GetS(ARG_TEMPLATE))
 
 	if err != nil {
-		printErrorAndExit(err)
+		printError(err.Error())
+		os.Exit(1)
 	}
 
 	t := template.New("Template")
@@ -258,20 +260,34 @@ func renderTemplate(doc *Document) {
 	err = t.Execute(fd, doc)
 
 	if err != nil {
-		printErrorAndExit(err)
+		printError(err.Error())
+		os.Exit(1)
 	}
+
+	fmtutil.Separator(false, doc.Title)
+
+	fmtc.Printf("  {*}Constants:{!} %d\n", len(doc.Constants))
+	fmtc.Printf("  {*}Variables:{!} %d\n", len(doc.Variables))
+	fmtc.Printf("  {*}Methods:{!}   %d\n", len(doc.Methods))
+	fmtc.NewLine()
+	fmtc.Printf(
+		"  {*}Output:{!} %s {s}(%s){!}\n", arg.GetS(ARG_OUTPUT),
+		fmtutil.PrettySize(fsutil.GetSize(arg.GetS(ARG_OUTPUT))),
+	)
+
+	fmtutil.Separator(false)
 }
 
 // renderConstant print constant info to console
 func renderConstant(c *Variable) {
-	fmtc.Printf("{s}%4d:{!} {m*}%s{!} {s}={!} %s\n", c.Line, c.Name, c.Value)
-	fmtc.Printf("      %s "+getVarTypeDesc(c.Type)+"\n", strings.Join(c.Desc, " "))
+	fmtc.Printf("{s}%4d:{!} {m*}%s{!} {s}={!} %s "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name, c.Value)
+	fmtc.Printf("      %s\n", c.UnitedDesc())
 }
 
 // renderMethod print variable info to console
 func renderVariable(v *Variable) {
-	fmtc.Printf("{s}%4d:{!} {c*}%s{!} {s}={!} %s\n", v.Line, v.Name, v.Value)
-	fmtc.Printf("      %s "+getVarTypeDesc(v.Type)+"\n", v.UnitedDesc())
+	fmtc.Printf("{s}%4d:{!} {c*}%s{!} {s}={!} %s "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name, v.Value)
+	fmtc.Printf("      %s\n", v.UnitedDesc())
 }
 
 // renderMethod print method info to console
@@ -328,10 +344,14 @@ func getVarTypeDesc(t VariableType) string {
 	}
 }
 
-// printErrorAndExit print error mesage and exit with exit code 1
-func printErrorAndExit(err error) {
-	fmtc.Printf("{r}%s{!}\n", err.Error())
-	os.Exit(1)
+// printError prints error message to console
+func printError(f string, a ...interface{}) {
+	fmtc.Printf("{r}"+f+"{!}\n", a...)
+}
+
+// printError prints warning message to console
+func printWarn(f string, a ...interface{}) {
+	fmtc.Printf("{y}"+f+"{!}\n", a...)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
