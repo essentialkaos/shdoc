@@ -2,11 +2,16 @@
 
 Tool for viewing and exporting docs for shell scripts.
 
+* [Usage Demo](#usage-demo)
 * [Installation](#installation)
 * [Usage](#usage)
 * [Test & Coverage Status](#test--coverage-status)
 * [Contributing](#contributing)
 * [License](#license)
+
+#### Usage Demo
+
+[![asciicast](https://asciinema.org/a/44314.png)](https://asciinema.org/a/44314)
 
 #### Installation
 
