@@ -27,7 +27,7 @@ Usage: shdoc <options> file
 Options:
 
   --output, -o file      Path to output file
-  --template, -t file    Path to template file
+  --template, -t name    Name of template
   --name, -n name        Overwrite default name
   --no-color, -nc        Disable colors in output
   --help, -h             Show this help message
