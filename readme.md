@@ -22,9 +22,9 @@ go get github.com/essentialkaos/shdoc
 #### Usage
 
 ```
-Usage: shdoc <options> file
+Usage: shdoc {options} file
 
-Options:
+Options
 
   --output, -o file      Path to output file
   --template, -t name    Name of template
@@ -38,7 +38,7 @@ Examples:
   shdoc script.sh
   Parse shell script and show docs in console
 
-  shdoc script.sh -t path/to/template.tpl -o my_script.md
+  shdoc script.sh -t markdown -o my_script.md
   Parse shell script and save docs using given export template
 
   shdoc script.sh someEntity
