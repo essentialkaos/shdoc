@@ -1,10 +1,7 @@
 language: go
 
 go:
-  - 1.4.3
-  - 1.5.3
-  - 1.6
-  - tip
+  - 1.7.1
 
 os:
   - linux
@@ -15,7 +12,7 @@ sudo: false
 before_install:
   - go get -v golang.org/x/tools/cmd/cover
   - go get -v pkg.re/check.v1
-  - go get -v pkg.re/essentialkaos/ek.v1
+  - go get -v pkg.re/essentialkaos/ek.v3
 
 script:
   - go test -coverprofile=coverage.txt -covermode=atomic ./parser
