@@ -9,17 +9,17 @@ Tool for viewing and exporting docs for shell scripts.
 * [Contributing](#contributing)
 * [License](#license)
 
-#### Usage Demo
+### Usage Demo
 
 [![asciicast](https://essentialkaos.com/github/shdoc-020.gif)](https://asciinema.org/a/85508)
 
-#### Installation
+### Installation
 
 ````
 go get github.com/essentialkaos/shdoc
 ````
 
-#### Usage
+### Usage
 
 ```
 Usage: shdoc {options} file
@@ -46,17 +46,17 @@ Examples:
 
 ```
 
-#### Test & Coverage Status
+### Test & Coverage Status
 
 | Branch | TravisCI | CodeCov |
 |--------|----------|---------|
 | `master` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) | [![codecov.io](https://codecov.io/github/essentialkaos/shdoc/coverage.svg?branch=master)](https://codecov.io/github/essentialkaos/shdoc?branch=master) |
 | `develop` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=develop)](https://travis-ci.org/essentialkaos/shdoc) | [![codecov.io](https://codecov.io/github/essentialkaos/shdoc/coverage.svg?branch=develop)](https://codecov.io/github/essentialkaos/shdoc?branch=develop) |
 
-#### Contributing
+### Contributing
 
 Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/contributing-guidelines#contributing-guidelines).
 
-#### License
+### License
 
 [EKOL](https://essentialkaos.com/ekol)
