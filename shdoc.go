@@ -13,11 +13,13 @@ import (
 	"strings"
 	"text/template"
 
-	"pkg.re/essentialkaos/ek.v1/arg"
-	"pkg.re/essentialkaos/ek.v1/fmtc"
-	"pkg.re/essentialkaos/ek.v1/fmtutil"
-	"pkg.re/essentialkaos/ek.v1/fsutil"
-	"pkg.re/essentialkaos/ek.v1/usage"
+	"pkg.re/essentialkaos/ek.v3/arg"
+	"pkg.re/essentialkaos/ek.v3/env"
+	"pkg.re/essentialkaos/ek.v3/fmtc"
+	"pkg.re/essentialkaos/ek.v3/fmtutil"
+	"pkg.re/essentialkaos/ek.v3/fsutil"
+	"pkg.re/essentialkaos/ek.v3/path"
+	"pkg.re/essentialkaos/ek.v3/usage"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -26,7 +28,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.1.5"
+	VER  = "0.2.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -43,7 +45,7 @@ const (
 
 var argMap = arg.Map{
 	ARG_OUTPUT:   &arg.V{},
-	ARG_TEMPLATE: &arg.V{Value: "/usr/local/share/shdoc/templates/markdown.tpl"},
+	ARG_TEMPLATE: &arg.V{Value: "html"},
 	ARG_NAME:     &arg.V{},
 	ARG_NO_COLOR: &arg.V{Type: arg.BOOL},
 	ARG_HELP:     &arg.V{Type: arg.BOOL, Alias: "u:usage"},
@@ -229,16 +231,24 @@ func simpleRender(doc *Document) {
 
 // renderTemplate read template and render to file
 func renderTemplate(doc *Document) {
-	if !fsutil.CheckPerms("FRS", arg.GetS(ARG_TEMPLATE)) {
-		printError("Can't read template %s - file is not exist or empty.", arg.GetS(ARG_TEMPLATE))
+	projectDir := env.Get().GetS("GOPATH")
+	templateFile := path.Join(
+		projectDir, "src/github.com/essentialkaos/shdoc/templates",
+		arg.GetS(ARG_TEMPLATE)+".tpl",
+	)
+
+	if !fsutil.CheckPerms("FRS", templateFile) {
+		printError("Can't read template %s - file is not exist or empty", templateFile)
 		os.Exit(1)
 	}
 
-	if fsutil.IsExist(arg.GetS(ARG_OUTPUT)) {
-		os.Remove(arg.GetS(ARG_OUTPUT))
+	outputFile := arg.GetS(ARG_OUTPUT)
+
+	if fsutil.IsExist(outputFile) {
+		os.Remove(outputFile)
 	}
 
-	fd, err := os.OpenFile(arg.GetS(ARG_OUTPUT), os.O_CREATE|os.O_WRONLY, 0644)
+	fd, err := os.OpenFile(outputFile, os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
 		printError(err.Error())
@@ -247,7 +257,7 @@ func renderTemplate(doc *Document) {
 
 	defer fd.Close()
 
-	tpl, err := ioutil.ReadFile(arg.GetS(ARG_TEMPLATE))
+	tpl, err := ioutil.ReadFile(templateFile)
 
 	if err != nil {
 		printError(err.Error())
@@ -271,8 +281,8 @@ func renderTemplate(doc *Document) {
 	fmtc.Printf("  {*}Methods:{!}   %d\n", len(doc.Methods))
 	fmtc.NewLine()
 	fmtc.Printf(
-		"  {*}Output:{!} %s {s}(%s){!}\n", arg.GetS(ARG_OUTPUT),
-		fmtutil.PrettySize(fsutil.GetSize(arg.GetS(ARG_OUTPUT))),
+		"  {*}Output:{!} %s {s-}(%s){!}\n", outputFile,
+		fmtutil.PrettySize(fsutil.GetSize(outputFile)),
 	)
 
 	fmtutil.Separator(false)
@@ -280,19 +290,19 @@ func renderTemplate(doc *Document) {
 
 // renderConstant print constant info to console
 func renderConstant(c *Variable) {
-	fmtc.Printf("{s}%4d:{!} {m*}%s{!} {s}={!} %s "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name, c.Value)
+	fmtc.Printf("{s-}%4d:{!} {m*}%s{!} {s}={!} %s "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name, c.Value)
 	fmtc.Printf("      %s\n", c.UnitedDesc())
 }
 
 // renderMethod print variable info to console
 func renderVariable(v *Variable) {
-	fmtc.Printf("{s}%4d:{!} {c*}%s{!} {s}={!} %s "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name, v.Value)
+	fmtc.Printf("{s-}%4d:{!} {c*}%s{!} {s}={!} %s "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name, v.Value)
 	fmtc.Printf("      %s\n", v.UnitedDesc())
 }
 
 // renderMethod print method info to console
 func renderMethod(m *Method, showExamples bool) {
-	fmtc.Printf("{s}%4d:{!} {b*}%s{!} {s}-{!} %s\n", m.Line, m.Name, m.UnitedDesc())
+	fmtc.Printf("{s-}%4d:{!} {b*}%s{!} {s}-{!} %s\n", m.Line, m.Name, m.UnitedDesc())
 
 	if len(m.Arguments) != 0 {
 		fmtc.NewLine()
@@ -300,11 +310,11 @@ func renderMethod(m *Method, showExamples bool) {
 		for _, a := range m.Arguments {
 			switch {
 			case a.IsOptional:
-				fmtc.Printf("  {s}%2s.{!} %s "+getVarTypeDesc(a.Type)+" {s}[Optional]{!}\n", a.Index, a.Desc)
+				fmtc.Printf("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type)+" {s-}[Optional]{!}\n", a.Index, a.Desc)
 			case a.IsWildcard:
-				fmtc.Printf("  {s}%2s.{!} %s\n", a.Index, a.Desc)
+				fmtc.Printf("  {s-}%2s.{!} %s\n", a.Index, a.Desc)
 			default:
-				fmtc.Printf("  {s}%2s.{!} %s "+getVarTypeDesc(a.Type)+"\n", a.Index, a.Desc)
+				fmtc.Printf("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type)+"\n", a.Index, a.Desc)
 			}
 		}
 	}
@@ -360,7 +370,7 @@ func showUsage() {
 	info := usage.NewInfo("", "file")
 
 	info.AddOption(ARG_OUTPUT, "Path to output file", "file")
-	info.AddOption(ARG_TEMPLATE, "Path to template file", "file")
+	info.AddOption(ARG_TEMPLATE, "Name of template", "name")
 	info.AddOption(ARG_NAME, "Overwrite default name", "name")
 	info.AddOption(ARG_NO_COLOR, "Disable colors in output")
 	info.AddOption(ARG_HELP, "Show this help message")
@@ -372,7 +382,7 @@ func showUsage() {
 	)
 
 	info.AddExample(
-		"script.sh -t path/to/template.tpl -o my_script.md",
+		"script.sh -t markdown -o my_script.md",
 		"Parse shell script and save docs using given export template",
 	)
 
