@@ -11,7 +11,7 @@ Tool for viewing and exporting docs for shell scripts.
 
 #### Usage Demo
 
-[![asciicast](https://asciinema.org/a/44314.png)](https://asciinema.org/a/44314)
+[![asciicast](https://essentialkaos.com/github/shdoc-020.gif)](https://asciinema.org/a/85508)
 
 #### Installation
 
