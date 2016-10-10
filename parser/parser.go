@@ -15,10 +15,10 @@ import (
 	"regexp"
 	"strings"
 
-	"pkg.re/essentialkaos/ek.v1/fsutil"
-	"pkg.re/essentialkaos/ek.v1/mathutil"
-	"pkg.re/essentialkaos/ek.v1/sliceutil"
-	"pkg.re/essentialkaos/ek.v1/strutil"
+	"pkg.re/essentialkaos/ek.v5/fsutil"
+	"pkg.re/essentialkaos/ek.v5/mathutil"
+	"pkg.re/essentialkaos/ek.v5/sliceutil"
+	"pkg.re/essentialkaos/ek.v5/strutil"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
