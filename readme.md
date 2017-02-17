@@ -48,10 +48,10 @@ Examples:
 
 ### Test & Coverage Status
 
-| Branch | TravisCI | CodeCov |
+| Branch | TravisCI | Coveralls |
 |--------|----------|---------|
-| `master` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) | [![codecov.io](https://codecov.io/github/essentialkaos/shdoc/coverage.svg?branch=master)](https://codecov.io/github/essentialkaos/shdoc?branch=master) |
-| `develop` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=develop)](https://travis-ci.org/essentialkaos/shdoc) | [![codecov.io](https://codecov.io/github/essentialkaos/shdoc/coverage.svg?branch=develop)](https://codecov.io/github/essentialkaos/shdoc?branch=develop) |
+| `master` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) |
+| `develop` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=develop)](https://travis-ci.org/essentialkaos/shdoc) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=develop)](https://coveralls.io/github/essentialkaos/shdoc?branch=develop) |
 
 ### Contributing
 
