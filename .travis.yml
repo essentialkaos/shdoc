@@ -20,15 +20,15 @@ matrix:
   fast_finish: true
   allow_failures:
     - go: tip
+    - os: osx
 
 before_install:
-  - go get -v golang.org/x/tools/cmd/cover
   - go get -v pkg.re/check.v1
-  - go get -v pkg.re/essentialkaos/ek.v5
+  - go get -v pkg.re/essentialkaos/ek.v6
+  - go get -v github.com/mattn/goveralls
 
 script:
-  - go test -coverprofile=coverage.txt -covermode=atomic ./parser
   - go build shdoc.go
+  - go test -covermode count -coverprofile cover.out ./parser
+  - goveralls -service travis-ci -repotoken $COVERALLS_TOKEN -coverprofile cover.out
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash)

@@ -2,8 +2,8 @@ package parser
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2015 Essential Kaos                         //
-//      Essential Kaos Open Source License <http://essentialkaos.com/ekol?en>         //
+//                     Copyright (c) 2009-2017 ESSENTIAL KAOS                         //
+//        Essential Kaos Open Source License <https://essentialkaos.com/ekol>         //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -15,10 +15,10 @@ import (
 	"regexp"
 	"strings"
 
-	"pkg.re/essentialkaos/ek.v5/fsutil"
-	"pkg.re/essentialkaos/ek.v5/mathutil"
-	"pkg.re/essentialkaos/ek.v5/sliceutil"
-	"pkg.re/essentialkaos/ek.v5/strutil"
+	"pkg.re/essentialkaos/ek.v6/fsutil"
+	"pkg.re/essentialkaos/ek.v6/mathutil"
+	"pkg.re/essentialkaos/ek.v6/sliceutil"
+	"pkg.re/essentialkaos/ek.v6/strutil"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -51,8 +51,8 @@ type Method struct {
 	Arguments  []*Argument `json:"arguments"`   // Arguments
 	ResultCode bool        `json:"result_code"` // Method uses exit codes
 	ResultEcho *Variable   `json:"result_echo"` // Return argument
-	Example    []string    `json:"example"`
-	Line       int         `json:"line"` // LOC of definition
+	Example    []string    `json:"example"`     // Example
+	Line       int         `json:"line"`        // LOC of definition
 }
 
 type Argument struct {

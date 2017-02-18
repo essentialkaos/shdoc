@@ -2,8 +2,8 @@ package main
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2015 Essential Kaos                         //
-//      Essential Kaos Open Source License <http://essentialkaos.com/ekol?en>         //
+//                     Copyright (c) 2009-2017 ESSENTIAL KAOS                         //
+//        Essential Kaos Open Source License <https://essentialkaos.com/ekol>         //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -13,13 +13,13 @@ import (
 	"strings"
 	"text/template"
 
-	"pkg.re/essentialkaos/ek.v5/arg"
-	"pkg.re/essentialkaos/ek.v5/env"
-	"pkg.re/essentialkaos/ek.v5/fmtc"
-	"pkg.re/essentialkaos/ek.v5/fmtutil"
-	"pkg.re/essentialkaos/ek.v5/fsutil"
-	"pkg.re/essentialkaos/ek.v5/path"
-	"pkg.re/essentialkaos/ek.v5/usage"
+	"pkg.re/essentialkaos/ek.v6/arg"
+	"pkg.re/essentialkaos/ek.v6/env"
+	"pkg.re/essentialkaos/ek.v6/fmtc"
+	"pkg.re/essentialkaos/ek.v6/fmtutil"
+	"pkg.re/essentialkaos/ek.v6/fsutil"
+	"pkg.re/essentialkaos/ek.v6/path"
+	"pkg.re/essentialkaos/ek.v6/usage"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -28,7 +28,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.2.1"
+	VER  = "0.2.2"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -44,12 +44,12 @@ const (
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 var argMap = arg.Map{
-	ARG_OUTPUT:   &arg.V{},
-	ARG_TEMPLATE: &arg.V{Value: "html"},
-	ARG_NAME:     &arg.V{},
-	ARG_NO_COLOR: &arg.V{Type: arg.BOOL},
-	ARG_HELP:     &arg.V{Type: arg.BOOL, Alias: "u:usage"},
-	ARG_VER:      &arg.V{Type: arg.BOOL, Alias: "ver"},
+	ARG_OUTPUT:   {},
+	ARG_TEMPLATE: {Value: "html"},
+	ARG_NAME:     {},
+	ARG_NO_COLOR: {Type: arg.BOOL},
+	ARG_HELP:     {Type: arg.BOOL, Alias: "u:usage"},
+	ARG_VER:      {Type: arg.BOOL, Alias: "ver"},
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -367,6 +367,8 @@ func printWarn(f string, a ...interface{}) {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func showUsage() {
+	usage.Breadcrumbs = true
+
 	info := usage.NewInfo("", "file")
 
 	info.AddOption(ARG_OUTPUT, "Path to output file", "file")
@@ -396,12 +398,13 @@ func showUsage() {
 
 func showAbout() {
 	about := &usage.About{
-		App:     APP,
-		Version: VER,
-		Desc:    DESC,
-		Year:    2009,
-		Owner:   "Essential Kaos",
-		License: "Essential Kaos Open Source License <https://essentialkaos.com/ekol?en>",
+		App:        APP,
+		Version:    VER,
+		Desc:       DESC,
+		Year:       2009,
+		Owner:      "Essential Kaos",
+		License:    "Essential Kaos Open Source License <https://essentialkaos.com/ekol>",
+		Repository: "essentialkaos/shdoc",
 	}
 
 	about.Render()
