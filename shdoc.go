@@ -13,13 +13,14 @@ import (
 	"strings"
 	"text/template"
 
-	"pkg.re/essentialkaos/ek.v6/arg"
-	"pkg.re/essentialkaos/ek.v6/env"
-	"pkg.re/essentialkaos/ek.v6/fmtc"
-	"pkg.re/essentialkaos/ek.v6/fmtutil"
-	"pkg.re/essentialkaos/ek.v6/fsutil"
-	"pkg.re/essentialkaos/ek.v6/path"
-	"pkg.re/essentialkaos/ek.v6/usage"
+	"pkg.re/essentialkaos/ek.v7/arg"
+	"pkg.re/essentialkaos/ek.v7/env"
+	"pkg.re/essentialkaos/ek.v7/fmtc"
+	"pkg.re/essentialkaos/ek.v7/fmtutil"
+	"pkg.re/essentialkaos/ek.v7/fsutil"
+	"pkg.re/essentialkaos/ek.v7/path"
+	"pkg.re/essentialkaos/ek.v7/usage"
+	"pkg.re/essentialkaos/ek.v7/usage/update"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -28,7 +29,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.2.2"
+	VER  = "0.3.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -367,8 +368,6 @@ func printWarn(f string, a ...interface{}) {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func showUsage() {
-	usage.Breadcrumbs = true
-
 	info := usage.NewInfo("", "file")
 
 	info.AddOption(ARG_OUTPUT, "Path to output file", "file")
@@ -398,13 +397,13 @@ func showUsage() {
 
 func showAbout() {
 	about := &usage.About{
-		App:        APP,
-		Version:    VER,
-		Desc:       DESC,
-		Year:       2009,
-		Owner:      "Essential Kaos",
-		License:    "Essential Kaos Open Source License <https://essentialkaos.com/ekol>",
-		Repository: "essentialkaos/shdoc",
+		App:           APP,
+		Version:       VER,
+		Desc:          DESC,
+		Year:          2009,
+		Owner:         "Essential Kaos",
+		License:       "Essential Kaos Open Source License <https://essentialkaos.com/ekol>",
+		UpdateChecker: usage.UpdateChecker{"essentialkaos/shdoc", update.GitHubChecker},
 	}
 
 	about.Render()
