@@ -96,7 +96,7 @@ func main() {
 
 func process(file string, pattern string) {
 	if !fsutil.IsExist(file) {
-		printError("File %s is not exist", file)
+		printError("File %s does not exist", file)
 		os.Exit(1)
 	}
 
@@ -239,7 +239,7 @@ func renderTemplate(doc *Document) {
 	)
 
 	if !fsutil.CheckPerms("FRS", templateFile) {
-		printError("Can't read template %s - file is not exist or empty", templateFile)
+		printError("Can't read template %s - file does not exist or empty", templateFile)
 		os.Exit(1)
 	}
 
