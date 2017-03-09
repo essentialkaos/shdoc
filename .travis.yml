@@ -5,6 +5,7 @@ language: go
 go:
   - 1.6.x
   - 1.7.x
+  - 1.8.x
   - tip
 
 branches:
@@ -14,7 +15,6 @@ branches:
 
 os:
   - linux
-  - osx
 
 matrix:
   fast_finish: true
@@ -23,12 +23,12 @@ matrix:
     - os: osx
 
 before_install:
-  - go get -v pkg.re/check.v1
-  - go get -v pkg.re/essentialkaos/ek.v6
+  - make deps
+  - make deps-test
   - go get -v github.com/mattn/goveralls
 
 script:
-  - go build shdoc.go
+  - make all
   - go test -covermode count -coverprofile cover.out ./parser
   - goveralls -service travis-ci -repotoken $COVERALLS_TOKEN -coverprofile cover.out
 
