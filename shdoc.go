@@ -29,7 +29,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.3.0"
+	VER  = "0.3.1"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -94,6 +94,7 @@ func main() {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// process start source processing
 func process(file string, pattern string) {
 	if !fsutil.IsExist(file) {
 		printError("File %s does not exist", file)

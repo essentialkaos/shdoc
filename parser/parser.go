@@ -34,6 +34,7 @@ const (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// VariableType contains variable type
 type VariableType uint8
 
 const (
@@ -45,6 +46,7 @@ const (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// Method contains info about method
 type Method struct {
 	Name       string      `json:"name"`        // Name
 	Desc       []string    `json:"desc"`        // Description
@@ -55,6 +57,7 @@ type Method struct {
 	Line       int         `json:"line"`        // LOC of definition
 }
 
+// Argument contains info about method argument
 type Argument struct {
 	Index      string       `json:"index"`    // Index
 	Desc       string       `json:"desc"`     // Desc
@@ -63,6 +66,7 @@ type Argument struct {
 	IsWildcard bool         `json:"wildcard"` // Wilcard
 }
 
+// Variable contains info about variable
 type Variable struct {
 	Name  string       `json:"name"`  // Name
 	Desc  []string     `json:"desc"`  // Description
@@ -71,6 +75,7 @@ type Variable struct {
 	Line  int          `json:"line"`  // LOC of definition
 }
 
+// Document contians info about all constants, global variables and methods
 type Document struct {
 	Title     string      `json:"title"`
 	About     []string    `json:"about"`
