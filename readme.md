@@ -1,4 +1,4 @@
-## SHDoc [![Release](https://img.shields.io/github/release/essentialkaos/shdoc.svg)](https://github.com/essentialkaos/shdoc/releases/latest) [![License](https://gh.kaos.io/ekol.svg)](https://essentialkaos.com/ekol)
+## SHDoc [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/shdoc)](https://goreportcard.com/report/github.com/essentialkaos/shdoc) [![License](https://gh.kaos.io/ekol.svg)](https://essentialkaos.com/ekol)
 
 Tool for viewing and exporting docs for shell scripts.
 
