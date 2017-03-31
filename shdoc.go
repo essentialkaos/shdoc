@@ -29,7 +29,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.3.1"
+	VER  = "0.3.2"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -97,18 +97,15 @@ func main() {
 // process start source processing
 func process(file string, pattern string) {
 	if !fsutil.IsExist(file) {
-		printError("File %s does not exist", file)
-		os.Exit(1)
+		printErrorAndExit("File %s does not exist", file)
 	}
 
 	if !fsutil.IsReadable(file) {
-		printError("File %s is not readable", file)
-		os.Exit(1)
+		printErrorAndExit("File %s is not readable", file)
 	}
 
 	if !fsutil.IsNonEmpty(file) {
-		printError("File %s is empty", file)
-		os.Exit(1)
+		printErrorAndExit("File %s is empty", file)
 	}
 
 	doc, errs := Parse(file)
@@ -240,8 +237,7 @@ func renderTemplate(doc *Document) {
 	)
 
 	if !fsutil.CheckPerms("FRS", templateFile) {
-		printError("Can't read template %s - file does not exist or empty", templateFile)
-		os.Exit(1)
+		printErrorAndExit("Can't read template %s - file does not exist or empty", templateFile)
 	}
 
 	outputFile := arg.GetS(ARG_OUTPUT)
@@ -253,8 +249,7 @@ func renderTemplate(doc *Document) {
 	fd, err := os.OpenFile(outputFile, os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
-		printError(err.Error())
-		os.Exit(1)
+		printErrorAndExit(err.Error())
 	}
 
 	defer fd.Close()
@@ -262,8 +257,7 @@ func renderTemplate(doc *Document) {
 	tpl, err := ioutil.ReadFile(templateFile)
 
 	if err != nil {
-		printError(err.Error())
-		os.Exit(1)
+		printErrorAndExit(err.Error())
 	}
 
 	t := template.New("Template")
@@ -272,8 +266,7 @@ func renderTemplate(doc *Document) {
 	err = t.Execute(fd, doc)
 
 	if err != nil {
-		printError(err.Error())
-		os.Exit(1)
+		printErrorAndExit(err.Error())
 	}
 
 	fmtutil.Separator(false, doc.Title)
@@ -358,12 +351,18 @@ func getVarTypeDesc(t VariableType) string {
 
 // printError prints error message to console
 func printError(f string, a ...interface{}) {
-	fmtc.Printf("{r}"+f+"{!}\n", a...)
+	fmtc.Fprintf(os.Stderr, "{r}"+f+"{!}\n", a...)
 }
 
 // printError prints warning message to console
 func printWarn(f string, a ...interface{}) {
-	fmtc.Printf("{y}"+f+"{!}\n", a...)
+	fmtc.Fprintf(os.Stderr, "{y}"+f+"{!}\n", a...)
+}
+
+// printErrorAndExit print error mesage and exit with exit code 1
+func printErrorAndExit(f string, a ...interface{}) {
+	printError(f, a...)
+	os.Exit(1)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
