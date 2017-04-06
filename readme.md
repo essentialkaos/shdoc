@@ -39,7 +39,7 @@ go get -u github.com/essentialkaos/shdoc
 
 You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.io/shdoc/latest).
 
-### Usage
+## Usage
 
 ```
 Usage: shdoc {options} file
@@ -66,17 +66,17 @@ Examples:
 
 ```
 
-### Test & Coverage Status
+## Test & Coverage Status
 
 | Branch | TravisCI | Coveralls |
 |--------|----------|---------|
 | `master` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) |
 | `develop` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=develop)](https://travis-ci.org/essentialkaos/shdoc) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=develop)](https://coveralls.io/github/essentialkaos/shdoc?branch=develop) |
 
-### Contributing
+## Contributing
 
 Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/contributing-guidelines#contributing-guidelines).
 
-### License
+## License
 
 [EKOL](https://essentialkaos.com/ekol)
