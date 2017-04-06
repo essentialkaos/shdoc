@@ -1,4 +1,4 @@
-## SHDoc [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/shdoc)](https://goreportcard.com/report/github.com/essentialkaos/shdoc) [![License](https://gh.kaos.io/ekol.svg)](https://essentialkaos.com/ekol)
+# SHDoc [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/shdoc)](https://goreportcard.com/report/github.com/essentialkaos/shdoc) [![License](https://gh.kaos.io/ekol.svg)](https://essentialkaos.com/ekol)
 
 Tool for viewing and exporting docs for shell scripts.
 
@@ -9,11 +9,13 @@ Tool for viewing and exporting docs for shell scripts.
 * [Contributing](#contributing)
 * [License](#license)
 
-### Usage Demo
+## Usage Demo
 
 [![demo](https://essentialkaos.com/github/shdoc-020.gif)](#usage-demo)
 
-### Installation
+## Installation
+
+### From source
 
 Before the initial install allows git to use redirects for [pkg.re](https://github.com/essentialkaos/pkgre) service (reason why you should do this described [here](https://github.com/essentialkaos/pkgre#git-support)):
 
@@ -32,6 +34,10 @@ If you want to update `shdoc` to latest stable release, do:
 ```
 go get -u github.com/essentialkaos/shdoc
 ```
+
+### Prebuilt binaries
+
+You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.io/shdoc/latest).
 
 ### Usage
 
