@@ -187,7 +187,7 @@ method12() {
 # Echo:
 # Example:
 method13(){
-stub=1
+  stub=1
 }
 `
 
