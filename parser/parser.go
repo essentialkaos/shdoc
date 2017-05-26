@@ -10,15 +10,16 @@ package parser
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 
-	"pkg.re/essentialkaos/ek.v8/fsutil"
-	"pkg.re/essentialkaos/ek.v8/mathutil"
-	"pkg.re/essentialkaos/ek.v8/sliceutil"
-	"pkg.re/essentialkaos/ek.v8/strutil"
+	"pkg.re/essentialkaos/ek.v9/fsutil"
+	"pkg.re/essentialkaos/ek.v9/mathutil"
+	"pkg.re/essentialkaos/ek.v9/sliceutil"
+	"pkg.re/essentialkaos/ek.v9/strutil"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -306,7 +307,13 @@ func Parse(file string) (*Document, []error) {
 
 	defer fd.Close()
 
-	reader := bufio.NewReader(fd)
+	return readData(file, bufio.NewReader(fd))
+}
+
+// ////////////////////////////////////////////////////////////////////////////////// //
+
+// readData read data
+func readData(file string, reader io.Reader) (*Document, []error) {
 	scanner := bufio.NewScanner(reader)
 
 	var buffer []string
@@ -411,8 +418,6 @@ func Parse(file string) (*Document, []error) {
 	return doc, []error{}
 }
 
-// ////////////////////////////////////////////////////////////////////////////////// //
-
 // parseEntity method parse entity and return type, name and value of
 // entity
 func parseEntity(data string) (EntityType, string, string) {
@@ -483,7 +488,7 @@ func parseMethodComment(name string, data []string) *Method {
 				method.Desc = extractMethodDesc(data, index)
 			}
 
-			retValue := line[6:]
+			retValue := strutil.Substr(line, 6, 99999)
 
 			if negativeValRegexp.MatchString(retValue) {
 				continue
@@ -497,7 +502,7 @@ func parseMethodComment(name string, data []string) *Method {
 				method.Desc = extractMethodDesc(data, index)
 			}
 
-			echoValue := line[6:]
+			echoValue := strutil.Substr(line, 6, 99999)
 
 			if negativeValRegexp.MatchString(echoValue) {
 				continue

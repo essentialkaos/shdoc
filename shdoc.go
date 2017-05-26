@@ -13,14 +13,14 @@ import (
 	"strings"
 	"text/template"
 
-	"pkg.re/essentialkaos/ek.v8/arg"
-	"pkg.re/essentialkaos/ek.v8/env"
-	"pkg.re/essentialkaos/ek.v8/fmtc"
-	"pkg.re/essentialkaos/ek.v8/fmtutil"
-	"pkg.re/essentialkaos/ek.v8/fsutil"
-	"pkg.re/essentialkaos/ek.v8/path"
-	"pkg.re/essentialkaos/ek.v8/usage"
-	"pkg.re/essentialkaos/ek.v8/usage/update"
+	"pkg.re/essentialkaos/ek.v9/env"
+	"pkg.re/essentialkaos/ek.v9/fmtc"
+	"pkg.re/essentialkaos/ek.v9/fmtutil"
+	"pkg.re/essentialkaos/ek.v9/fsutil"
+	"pkg.re/essentialkaos/ek.v9/options"
+	"pkg.re/essentialkaos/ek.v9/path"
+	"pkg.re/essentialkaos/ek.v9/usage"
+	"pkg.re/essentialkaos/ek.v9/usage/update"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -29,34 +29,34 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.4.0"
+	VER  = "0.5.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
 const (
-	ARG_OUTPUT   = "o:output"
-	ARG_TEMPLATE = "t:template"
-	ARG_NAME     = "n:name"
-	ARG_NO_COLOR = "nc:no-color"
-	ARG_HELP     = "h:help"
-	ARG_VER      = "v:version"
+	OPT_OUTPUT   = "o:output"
+	OPT_TEMPLATE = "t:template"
+	OPT_NAME     = "n:name"
+	OPT_NO_COLOR = "nc:no-color"
+	OPT_HELP     = "h:help"
+	OPT_VER      = "v:version"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-var argMap = arg.Map{
-	ARG_OUTPUT:   {},
-	ARG_TEMPLATE: {Value: "html"},
-	ARG_NAME:     {},
-	ARG_NO_COLOR: {Type: arg.BOOL},
-	ARG_HELP:     {Type: arg.BOOL, Alias: "u:usage"},
-	ARG_VER:      {Type: arg.BOOL, Alias: "ver"},
+var optMap = options.Map{
+	OPT_OUTPUT:   {},
+	OPT_TEMPLATE: {Value: "html"},
+	OPT_NAME:     {},
+	OPT_NO_COLOR: {Type: options.BOOL},
+	OPT_HELP:     {Type: options.BOOL, Alias: "u:usage"},
+	OPT_VER:      {Type: options.BOOL, Alias: "ver"},
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 func main() {
-	args, errs := arg.Parse(argMap)
+	args, errs := options.Parse(optMap)
 
 	if len(errs) != 0 {
 		fmtc.Println("Arguments parsing errors:")
@@ -68,16 +68,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	if arg.GetB(ARG_NO_COLOR) {
+	if options.GetB(OPT_NO_COLOR) {
 		fmtc.DisableColors = true
 	}
 
-	if arg.GetB(ARG_VER) {
+	if options.GetB(OPT_VER) {
 		showAbout()
 		return
 	}
 
-	if arg.GetB(ARG_HELP) || len(args) == 0 {
+	if options.GetB(OPT_HELP) || len(args) == 0 {
 		showUsage()
 		return
 	}
@@ -125,11 +125,11 @@ func process(file string, pattern string) {
 		os.Exit(2)
 	}
 
-	if arg.GetS(ARG_NAME) != "" {
-		doc.Title = arg.GetS(ARG_NAME)
+	if options.GetS(OPT_NAME) != "" {
+		doc.Title = options.GetS(OPT_NAME)
 	}
 
-	if arg.GetS(ARG_OUTPUT) == "" {
+	if options.GetS(OPT_OUTPUT) == "" {
 		if pattern == "" {
 			simpleRender(doc)
 		} else {
@@ -233,14 +233,14 @@ func renderTemplate(doc *Document) {
 	projectDir := env.Get().GetS("GOPATH")
 	templateFile := path.Join(
 		projectDir, "src/github.com/essentialkaos/shdoc/templates",
-		arg.GetS(ARG_TEMPLATE)+".tpl",
+		options.GetS(OPT_TEMPLATE)+".tpl",
 	)
 
 	if !fsutil.CheckPerms("FRS", templateFile) {
 		printErrorAndExit("Can't read template %s - file does not exist or empty", templateFile)
 	}
 
-	outputFile := arg.GetS(ARG_OUTPUT)
+	outputFile := options.GetS(OPT_OUTPUT)
 
 	if fsutil.IsExist(outputFile) {
 		os.Remove(outputFile)
@@ -370,12 +370,12 @@ func printErrorAndExit(f string, a ...interface{}) {
 func showUsage() {
 	info := usage.NewInfo("", "file")
 
-	info.AddOption(ARG_OUTPUT, "Path to output file", "file")
-	info.AddOption(ARG_TEMPLATE, "Name of template", "name")
-	info.AddOption(ARG_NAME, "Overwrite default name", "name")
-	info.AddOption(ARG_NO_COLOR, "Disable colors in output")
-	info.AddOption(ARG_HELP, "Show this help message")
-	info.AddOption(ARG_VER, "Show version")
+	info.AddOption(OPT_OUTPUT, "Path to output file", "file")
+	info.AddOption(OPT_TEMPLATE, "Name of template", "name")
+	info.AddOption(OPT_NAME, "Overwrite default name", "name")
+	info.AddOption(OPT_NO_COLOR, "Disable colors in output")
+	info.AddOption(OPT_HELP, "Show this help message")
+	info.AddOption(OPT_VER, "Show version")
 
 	info.AddExample(
 		"script.sh",
