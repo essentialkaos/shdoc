@@ -9,13 +9,13 @@ Tool for viewing and exporting docs for shell scripts.
 * [Contributing](#contributing)
 * [License](#license)
 
-## Usage Demo
+### Usage Demo
 
 [![demo](https://essentialkaos.com/github/shdoc-020.gif)](#usage-demo)
 
-## Installation
+### Installation
 
-### From source
+#### From source
 
 Before the initial install allows git to use redirects for [pkg.re](https://github.com/essentialkaos/pkgre) service (reason why you should do this described [here](https://github.com/essentialkaos/pkgre#git-support)):
 
@@ -35,11 +35,11 @@ If you want to update `shdoc` to latest stable release, do:
 go get -u github.com/essentialkaos/shdoc
 ```
 
-### Prebuilt binaries
+#### Prebuilt binaries
 
 You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.io/shdoc/latest).
 
-## Usage
+### Usage
 
 ```
 Usage: shdoc {options} file
@@ -66,17 +66,19 @@ Examples:
 
 ```
 
-## Test & Coverage Status
+### Test & Coverage Status
 
 | Branch | TravisCI | Coveralls |
 |--------|----------|---------|
 | `master` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) |
 | `develop` | [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=develop)](https://travis-ci.org/essentialkaos/shdoc) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=develop)](https://coveralls.io/github/essentialkaos/shdoc?branch=develop) |
 
-## Contributing
+### Contributing
 
 Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/contributing-guidelines#contributing-guidelines).
 
-## License
+### License
 
 [EKOL](https://essentialkaos.com/ekol)
+
+<p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.io/ekgh.svg"/></a></p>
