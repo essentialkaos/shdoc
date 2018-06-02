@@ -1,13 +1,16 @@
-# SHDoc [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/shdoc)](https://goreportcard.com/report/github.com/essentialkaos/shdoc) [![codebeat badge](https://codebeat.co/badges/a4221ea2-3758-4fb6-adf0-08cd7199960a)](https://codebeat.co/projects/github-com-essentialkaos-shdoc-master) [![License](https://gh.kaos.st/ekol.svg)](https://essentialkaos.com/ekol)
+<p align="center"><a href="#readme"><img src="https://gh.kaos.st/shdoc.svg"/></a></p>
 
-Tool for viewing and exporting docs for shell scripts.
+<p align="center"><a href="#usage-demo">Usage Demo</a> • <a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#test--coverage-status">Test & Coverage Status</a> • <a href="#contributing">Contributing</a> • <a href="#license">License</a></p>
 
-* [Usage Demo](#usage-demo)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Test & Coverage Status](#test--coverage-status)
-* [Contributing](#contributing)
-* [License](#license)
+<p align="center">
+  <a href="https://travis-ci.org/essentialkaos/shdoc"><img src="https://travis-ci.org/essentialkaos/shdoc.svg"></a>
+  <a href="https://goreportcard.com/report/github.com/essentialkaos/shdoc"><img src="https://goreportcard.com/badge/github.com/essentialkaos/shdoc"></a>
+  <a href="https://codebeat.co/projects/github-com-essentialkaos-shdoc-master"><img alt="codebeat badge" src="https://codebeat.co/badges/a4221ea2-3758-4fb6-adf0-08cd7199960a" /></a>
+  <a href='https://coveralls.io/github/essentialkaos/shdoc?branch=master'><img src='https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master' alt='Coverage Status' /></a>
+  <a href="https://essentialkaos.com/ekol"><img src="https://gh.kaos.st/ekol.svg"></a>
+</p>
+
+`shdoc` is a tool for viewing and exporting documentation for shell scripts.
 
 ### Usage Demo
 
@@ -17,13 +20,13 @@ Tool for viewing and exporting docs for shell scripts.
 
 #### From source
 
-Before the initial install allows git to use redirects for [pkg.re](https://github.com/essentialkaos/pkgre) service (reason why you should do this described [here](https://github.com/essentialkaos/pkgre#git-support)):
+Before the initial install allows git to use redirects for [pkg.re](https://github.com/essentialkaos/pkgre) service (_reason why you should do this described [here](https://github.com/essentialkaos/pkgre#git-support)_):
 
 ```
 git config --global http.https://pkg.re.followRedirects true
 ```
 
-Make sure you have a working Go 1.6+ workspace ([instructions](https://golang.org/doc/install)), then:
+Make sure you have a working Go 1.8+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get github.com/essentialkaos/shdoc
