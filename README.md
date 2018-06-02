@@ -1,4 +1,4 @@
-# SHDoc [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/shdoc)](https://goreportcard.com/report/github.com/essentialkaos/shdoc) [![codebeat badge](https://codebeat.co/badges/a4221ea2-3758-4fb6-adf0-08cd7199960a)](https://codebeat.co/projects/github-com-essentialkaos-shdoc-master) [![License](https://gh.kaos.io/ekol.svg)](https://essentialkaos.com/ekol)
+# SHDoc [![Build Status](https://travis-ci.org/essentialkaos/shdoc.svg?branch=master)](https://travis-ci.org/essentialkaos/shdoc) [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/essentialkaos/shdoc)](https://goreportcard.com/report/github.com/essentialkaos/shdoc) [![codebeat badge](https://codebeat.co/badges/a4221ea2-3758-4fb6-adf0-08cd7199960a)](https://codebeat.co/projects/github-com-essentialkaos-shdoc-master) [![License](https://gh.kaos.st/ekol.svg)](https://essentialkaos.com/ekol)
 
 Tool for viewing and exporting docs for shell scripts.
 
@@ -11,7 +11,7 @@ Tool for viewing and exporting docs for shell scripts.
 
 ### Usage Demo
 
-[![demo](https://essentialkaos.com/github/shdoc-020.gif)](#usage-demo)
+[![demo](https://gh.kaos.st/shdoc-020.gif)](#usage-demo)
 
 ### Installation
 
@@ -37,7 +37,7 @@ go get -u github.com/essentialkaos/shdoc
 
 #### Prebuilt binaries
 
-You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.io/shdoc/latest).
+You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.st/shdoc/latest).
 
 ### Usage
 
@@ -81,4 +81,4 @@ Before contributing to this project please read our [Contributing Guidelines](ht
 
 [EKOL](https://essentialkaos.com/ekol)
 
-<p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.io/ekgh.svg"/></a></p>
+<p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.st/ekgh.svg"/></a></p>
