@@ -26,7 +26,7 @@ Before the initial install allows git to use redirects for [pkg.re](https://gith
 git config --global http.https://pkg.re.followRedirects true
 ```
 
-Make sure you have a working Go 1.8+ workspace ([instructions](https://golang.org/doc/install)), then:
+Make sure you have a working Go 1.10+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get github.com/essentialkaos/shdoc
