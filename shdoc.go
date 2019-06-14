@@ -2,7 +2,7 @@ package main
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2018 ESSENTIAL KAOS                         //
+//                     Copyright (c) 2009-2019 ESSENTIAL KAOS                         //
 //        Essential Kaos Open Source License <https://essentialkaos.com/ekol>         //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -13,14 +13,13 @@ import (
 	"strings"
 	"text/template"
 
-	"pkg.re/essentialkaos/ek.v9/env"
-	"pkg.re/essentialkaos/ek.v9/fmtc"
-	"pkg.re/essentialkaos/ek.v9/fmtutil"
-	"pkg.re/essentialkaos/ek.v9/fsutil"
-	"pkg.re/essentialkaos/ek.v9/options"
-	"pkg.re/essentialkaos/ek.v9/path"
-	"pkg.re/essentialkaos/ek.v9/usage"
-	"pkg.re/essentialkaos/ek.v9/usage/update"
+	"pkg.re/essentialkaos/ek.v10/fmtc"
+	"pkg.re/essentialkaos/ek.v10/fmtutil"
+	"pkg.re/essentialkaos/ek.v10/fsutil"
+	"pkg.re/essentialkaos/ek.v10/options"
+	"pkg.re/essentialkaos/ek.v10/path"
+	"pkg.re/essentialkaos/ek.v10/usage"
+	"pkg.re/essentialkaos/ek.v10/usage/update"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -29,7 +28,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.5.0"
+	VER  = "0.6.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -55,6 +54,7 @@ var optMap = options.Map{
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// main is main function
 func main() {
 	args, errs := options.Parse(optMap)
 
@@ -94,7 +94,7 @@ func main() {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// process start source processing
+// process starts source processing
 func process(file string, pattern string) {
 	if !fsutil.IsExist(file) {
 		printErrorAndExit("File %s does not exist", file)
@@ -140,7 +140,7 @@ func process(file string, pattern string) {
 	}
 }
 
-// findInfo search geven pattern in entities names
+// findInfo searches geven pattern in entities names
 func findInfo(doc *Document, pattern string) {
 	fmtc.NewLine()
 
@@ -172,7 +172,7 @@ func findInfo(doc *Document, pattern string) {
 	}
 }
 
-// simpleRender print all document info to console
+// simpleRender prints all document info to console
 func simpleRender(doc *Document) {
 	if doc.HasAbout() {
 		fmtutil.Separator(false, "ABOUT")
@@ -228,9 +228,9 @@ func simpleRender(doc *Document) {
 	fmtutil.Separator(false)
 }
 
-// renderTemplate read template and render to file
+// renderTemplate reads template and render to file
 func renderTemplate(doc *Document) {
-	projectDir := env.Get().GetS("GOPATH")
+	projectDir := os.Getenv("GOPATH")
 	templateFile := path.Join(
 		projectDir, "src/github.com/essentialkaos/shdoc/templates",
 		options.GetS(OPT_TEMPLATE)+".tpl",
@@ -283,19 +283,19 @@ func renderTemplate(doc *Document) {
 	fmtutil.Separator(false)
 }
 
-// renderConstant print constant info to console
+// renderConstant prints constant info to console
 func renderConstant(c *Variable) {
 	fmtc.Printf("{s-}%4d:{!} {m*}%s{!} {s}={!} %s "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name, c.Value)
 	fmtc.Printf("      %s\n", c.UnitedDesc())
 }
 
-// renderMethod print variable info to console
+// renderMethod prints variable info to console
 func renderVariable(v *Variable) {
 	fmtc.Printf("{s-}%4d:{!} {c*}%s{!} {s}={!} %s "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name, v.Value)
 	fmtc.Printf("      %s\n", v.UnitedDesc())
 }
 
-// renderMethod print method info to console
+// renderMethod prints method info to console
 func renderMethod(m *Method, showExamples bool) {
 	fmtc.Printf("{s-}%4d:{!} {b*}%s{!} {s}-{!} %s\n", m.Line, m.Name, m.UnitedDesc())
 
@@ -335,7 +335,7 @@ func renderMethod(m *Method, showExamples bool) {
 	}
 }
 
-// getVarTypeDesc return type description
+// getVarTypeDesc returns type description
 func getVarTypeDesc(t VariableType) string {
 	switch t {
 	case VAR_TYPE_STRING:
@@ -359,7 +359,7 @@ func printWarn(f string, a ...interface{}) {
 	fmtc.Fprintf(os.Stderr, "{y}"+f+"{!}\n", a...)
 }
 
-// printErrorAndExit print error mesage and exit with exit code 1
+// printErrorAndExit prints error mesage and exit with exit code 1
 func printErrorAndExit(f string, a ...interface{}) {
 	printError(f, a...)
 	os.Exit(1)
@@ -367,6 +367,7 @@ func printErrorAndExit(f string, a ...interface{}) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// showUsage shows usage info
 func showUsage() {
 	info := usage.NewInfo("", "file")
 
@@ -395,6 +396,7 @@ func showUsage() {
 	info.Render()
 }
 
+// showAbout shows info about version
 func showAbout() {
 	about := &usage.About{
 		App:           APP,
