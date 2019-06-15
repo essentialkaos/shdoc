@@ -10,6 +10,8 @@
 
 <p align="center"><a href="#usage-demo">Usage Demo</a> • <a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#test--coverage-status">Test & Coverage Status</a> • <a href="#contributing">Contributing</a> • <a href="#license">License</a></p>
 
+<br/>
+
 `shdoc` is a tool for viewing and exporting documentation for shell scripts.
 
 ### Usage Demo
