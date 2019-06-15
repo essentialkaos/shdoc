@@ -2,7 +2,7 @@ package parser
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2018 ESSENTIAL KAOS                         //
+//                     Copyright (c) 2009-2019 ESSENTIAL KAOS                         //
 //        Essential Kaos Open Source License <https://essentialkaos.com/ekol>         //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -16,10 +16,10 @@ import (
 	"regexp"
 	"strings"
 
-	"pkg.re/essentialkaos/ek.v9/fsutil"
-	"pkg.re/essentialkaos/ek.v9/mathutil"
-	"pkg.re/essentialkaos/ek.v9/sliceutil"
-	"pkg.re/essentialkaos/ek.v9/strutil"
+	"pkg.re/essentialkaos/ek.v10/fsutil"
+	"pkg.re/essentialkaos/ek.v10/mathutil"
+	"pkg.re/essentialkaos/ek.v10/sliceutil"
+	"pkg.re/essentialkaos/ek.v10/strutil"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -76,7 +76,7 @@ type Variable struct {
 	Line  int          `json:"line"`  // LOC of definition
 }
 
-// Document contians info about all constants, global variables and methods
+// Document contains info about all constants, global variables and methods
 type Document struct {
 	Title     string      `json:"title"`
 	About     []string    `json:"about"`

@@ -1,7 +1,5 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/shdoc.svg"/></a></p>
 
-<p align="center"><a href="#usage-demo">Usage Demo</a> • <a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#test--coverage-status">Test & Coverage Status</a> • <a href="#contributing">Contributing</a> • <a href="#license">License</a></p>
-
 <p align="center">
   <a href="https://travis-ci.org/essentialkaos/shdoc"><img src="https://travis-ci.org/essentialkaos/shdoc.svg"></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/shdoc"><img src="https://goreportcard.com/badge/github.com/essentialkaos/shdoc"></a>
@@ -9,6 +7,10 @@
   <a href='https://coveralls.io/github/essentialkaos/shdoc?branch=master'><img src='https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master' alt='Coverage Status' /></a>
   <a href="https://essentialkaos.com/ekol"><img src="https://gh.kaos.st/ekol.svg"></a>
 </p>
+
+<p align="center"><a href="#usage-demo">Usage Demo</a> • <a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#test--coverage-status">Test & Coverage Status</a> • <a href="#contributing">Contributing</a> • <a href="#license">License</a></p>
+
+<br/>
 
 `shdoc` is a tool for viewing and exporting documentation for shell scripts.
 
@@ -26,7 +28,7 @@ Before the initial install allows git to use redirects for [pkg.re](https://gith
 git config --global http.https://pkg.re.followRedirects true
 ```
 
-Make sure you have a working Go 1.8+ workspace ([instructions](https://golang.org/doc/install)), then:
+Make sure you have a working Go 1.10+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get github.com/essentialkaos/shdoc
