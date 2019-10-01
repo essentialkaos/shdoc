@@ -8,18 +8,22 @@ package main
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 	"text/template"
 
-	"pkg.re/essentialkaos/ek.v10/fmtc"
-	"pkg.re/essentialkaos/ek.v10/fmtutil"
-	"pkg.re/essentialkaos/ek.v10/fsutil"
-	"pkg.re/essentialkaos/ek.v10/options"
-	"pkg.re/essentialkaos/ek.v10/path"
-	"pkg.re/essentialkaos/ek.v10/usage"
-	"pkg.re/essentialkaos/ek.v10/usage/update"
+	"pkg.re/essentialkaos/ek.v11/fmtc"
+	"pkg.re/essentialkaos/ek.v11/fmtutil"
+	"pkg.re/essentialkaos/ek.v11/fsutil"
+	"pkg.re/essentialkaos/ek.v11/options"
+	"pkg.re/essentialkaos/ek.v11/path"
+	"pkg.re/essentialkaos/ek.v11/usage"
+	"pkg.re/essentialkaos/ek.v11/usage/completion/bash"
+	"pkg.re/essentialkaos/ek.v11/usage/completion/fish"
+	"pkg.re/essentialkaos/ek.v11/usage/completion/zsh"
+	"pkg.re/essentialkaos/ek.v11/usage/update"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -28,7 +32,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.6.0"
+	VER  = "0.7.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -39,6 +43,8 @@ const (
 	OPT_NO_COLOR = "nc:no-color"
 	OPT_HELP     = "h:help"
 	OPT_VER      = "v:version"
+
+	OPT_COMPLETION = "completion"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -50,6 +56,8 @@ var optMap = options.Map{
 	OPT_NO_COLOR: {Type: options.BOOL},
 	OPT_HELP:     {Type: options.BOOL, Alias: "u:usage"},
 	OPT_VER:      {Type: options.BOOL, Alias: "ver"},
+
+	OPT_COMPLETION: {},
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -66,6 +74,10 @@ func main() {
 		}
 
 		os.Exit(1)
+	}
+
+	if options.Has(OPT_COMPLETION) {
+		genCompletion()
 	}
 
 	if options.GetB(OPT_NO_COLOR) {
@@ -367,8 +379,13 @@ func printErrorAndExit(f string, a ...interface{}) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// showUsage shows usage info
+// showUsage prints usage info
 func showUsage() {
+	genUsage().Render()
+}
+
+// genUsage generates usage info
+func genUsage() *usage.Info {
 	info := usage.NewInfo("", "file")
 
 	info.AddOption(OPT_OUTPUT, "Path to output file", "file")
@@ -393,7 +410,25 @@ func showUsage() {
 		"Parse shell script and show docs for some constant, variable or method",
 	)
 
-	info.Render()
+	return info
+}
+
+// genCompletion generates completion for different shells
+func genCompletion() {
+	info := genUsage()
+
+	switch options.GetS(OPT_COMPLETION) {
+	case "bash":
+		fmt.Printf(bash.Generate(info, "shdoc"))
+	case "fish":
+		fmt.Printf(fish.Generate(info, "shdoc"))
+	case "zsh":
+		fmt.Printf(zsh.Generate(info, optMap, "shdoc"))
+	default:
+		os.Exit(1)
+	}
+
+	os.Exit(0)
 }
 
 // showAbout shows info about version
