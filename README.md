@@ -44,6 +44,27 @@ go get -u github.com/essentialkaos/shdoc
 
 You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.st/shdoc/latest).
 
+### Command-line completion
+
+You can generate completion for `bash`, `zsh` or `fish` shell.
+
+Bash:
+```
+[sudo] shdoc --completion=bash 1> /etc/bash_completion.d/shdoc
+```
+
+
+ZSH:
+```
+[sudo] shdoc --completion=zsh 1> /usr/share/zsh/site-functions/shdoc
+```
+
+
+Fish:
+```
+[sudo] shdoc --completion=fish 1> /usr/share/fish/vendor_completions.d/shdoc.fish
+```
+
 ### Usage
 
 ```
