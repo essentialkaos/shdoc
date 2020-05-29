@@ -2,7 +2,7 @@ package parser
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                     Copyright (c) 2009-2019 ESSENTIAL KAOS                         //
+//                     Copyright (c) 2009-2020 ESSENTIAL KAOS                         //
 //        Essential Kaos Open Source License <https://essentialkaos.com/ekol>         //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -16,10 +16,10 @@ import (
 	"regexp"
 	"strings"
 
-	"pkg.re/essentialkaos/ek.v11/fsutil"
-	"pkg.re/essentialkaos/ek.v11/mathutil"
-	"pkg.re/essentialkaos/ek.v11/sliceutil"
-	"pkg.re/essentialkaos/ek.v11/strutil"
+	"pkg.re/essentialkaos/ek.v12/fsutil"
+	"pkg.re/essentialkaos/ek.v12/mathutil"
+	"pkg.re/essentialkaos/ek.v12/sliceutil"
+	"pkg.re/essentialkaos/ek.v12/strutil"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -96,6 +96,8 @@ var (
 	methodArgRegExp   = regexp.MustCompile(`([0-9]{1,}|\*):[ ]{0,}(.*)`)
 	negativeValRegexp = regexp.MustCompile(`^((N|n)one|(N|n)o(t|)|(F|f)alse)`)
 )
+
+var ignoreTags = []string{"private", "PRIVATE", "-"}
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -317,9 +319,10 @@ func readData(file string, reader io.Reader) (*Document, []error) {
 	scanner := bufio.NewScanner(reader)
 
 	var buffer []string
-	var doc = &Document{Title: filepath.Base(file)}
+	var methodsSection bool
 
-	var lineNum = 0
+	lineNum := 0
+	doc := &Document{Title: filepath.Base(file)}
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -360,6 +363,12 @@ func readData(file string, reader io.Reader) (*Document, []error) {
 			continue
 		}
 
+		// Ignore all var definitions after first method
+		if t != ENT_TYPE_METHOD && methodsSection {
+			buffer = nil
+			continue
+		}
+
 		switch t {
 		case ENT_TYPE_METHOD:
 			m := parseMethodComment(name, buffer)
@@ -374,6 +383,10 @@ func readData(file string, reader io.Reader) (*Document, []error) {
 			// Methods MUST have description
 			if len(m.Desc) != 0 {
 				doc.Methods = append(doc.Methods, m)
+			}
+
+			if !methodsSection {
+				methodsSection = true
 			}
 
 			buffer = nil
@@ -442,7 +455,7 @@ func parseEntity(data string) (EntityType, string, string) {
 // parseVariableComment method parse variable comment data and return
 // variable struct
 func parseVariableComment(name, value string, data []string) *Variable {
-	if len(data) == 0 || sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
+	if len(data) == 0 || sliceutil.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 
@@ -466,7 +479,7 @@ func parseVariableComment(name, value string, data []string) *Variable {
 // parseMethodComment method parse method comment data and return
 // method struct
 func parseMethodComment(name string, data []string) *Method {
-	if len(data) == 0 || sliceutil.Contains([]string{"private", "PRIVATE", "-"}, strings.TrimRight(data[0], " ")) {
+	if len(data) == 0 || sliceutil.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 
