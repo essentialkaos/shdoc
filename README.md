@@ -2,6 +2,7 @@
 
 <p align="center">
   <a href="https://travis-ci.com/essentialkaos/shdoc"><img src="https://travis-ci.com/essentialkaos/shdoc.svg"></a>
+  <a href="https://github.com/essentialkaos/shdoc/actions?query=workflow%3ACodeQL"><img src="https://github.com/essentialkaos/shdoc/workflows/CodeQL/badge.svg" /></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/shdoc"><img src="https://goreportcard.com/badge/github.com/essentialkaos/shdoc"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-shdoc-master"><img alt="codebeat badge" src="https://codebeat.co/badges/a4221ea2-3758-4fb6-adf0-08cd7199960a" /></a>
   <a href='https://coveralls.io/github/essentialkaos/shdoc?branch=master'><img src='https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master' alt='Coverage Status' /></a>
