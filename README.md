@@ -95,10 +95,10 @@ Examples:
 
 ### Test & Coverage Status
 
-| Branch | TravisCI | Coveralls |
+| Branch | CI | Coveralls |
 |--------|----------|---------|
-| `master` | [![CI](https://github.com/essentialkaos/shdoc/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/shdoc/actions) |
-| `develop` | [![CI](https://github.com/essentialkaos/shdoc/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/shdoc/actions) |
+| `master` | [![CI](https://github.com/essentialkaos/shdoc/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/shdoc/actions) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) |
+| `develop` | [![CI](https://github.com/essentialkaos/shdoc/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/shdoc/actions) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=develop)](https://coveralls.io/github/essentialkaos/shdoc?branch=develop)
 
 ### Contributing
 
