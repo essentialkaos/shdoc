@@ -1,11 +1,11 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/shdoc.svg"/></a></p>
 
 <p align="center">
-  <a href="https://github.com/essentialkaos/shdoc/actions"><img src="https://github.com/essentialkaos/shdoc/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
-  <a href="https://github.com/essentialkaos/shdoc/actions?query=workflow%3ACodeQL"><img src="https://github.com/essentialkaos/shdoc/workflows/CodeQL/badge.svg" /></a>
-  <a href="https://goreportcard.com/report/github.com/essentialkaos/shdoc"><img src="https://goreportcard.com/badge/github.com/essentialkaos/shdoc"></a>
-  <a href="https://codebeat.co/projects/github-com-essentialkaos-shdoc-master"><img alt="codebeat badge" src="https://codebeat.co/badges/a4221ea2-3758-4fb6-adf0-08cd7199960a" /></a>
-  <a href='https://coveralls.io/github/essentialkaos/shdoc?branch=master'><img src='https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master' alt='Coverage Status' /></a>
+  <a href="https://kaos.sh/w/shdoc/ci"><img src="https://kaos.sh/w/shdoc/ci.svg" alt="GitHub Actions CI Status" /></a>
+  <a href="https://kaos.sh/r/shdoc"><img src="https://kaos.sh/r/shdoc.svg" alt="GoReportCard" /></a>
+  <a href="https://kaos.sh/b/shdoc"><img src="https://kaos.sh/b/a4221ea2-3758-4fb6-adf0-08cd7199960a.svg" alt="codebeat badge" /></a>
+  <a href="https://kaos.sh/w/shdoc/codeql"><img src="https://kaos.sh/w/shdoc/codeql.svg" alt="GitHub Actions CodeQL Status" /></a>
+  <a href="https://kaos.sh/c/shdoc"><img src="https://kaos.sh/c/shdoc.svg" alt="Coverage Status" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
@@ -23,7 +23,7 @@
 
 #### From source
 
-Make sure you have a working Go 1.14+ workspace ([instructions](https://golang.org/doc/install)), then:
+Make sure you have a working Go 1.16+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get github.com/essentialkaos/shdoc
@@ -51,19 +51,19 @@ You can generate completion for `bash`, `zsh` or `fish` shell.
 
 Bash:
 ```
-[sudo] shdoc --completion=bash 1> /etc/bash_completion.d/shdoc
+sudo shdoc --completion=bash 1> /etc/bash_completion.d/shdoc
 ```
 
 
 ZSH:
 ```
-[sudo] shdoc --completion=zsh 1> /usr/share/zsh/site-functions/shdoc
+sudo shdoc --completion=zsh 1> /usr/share/zsh/site-functions/shdoc
 ```
 
 
 Fish:
 ```
-[sudo] shdoc --completion=fish 1> /usr/share/fish/vendor_completions.d/shdoc.fish
+sudo shdoc --completion=fish 1> /usr/share/fish/vendor_completions.d/shdoc.fish
 ```
 
 ### Usage
@@ -95,10 +95,10 @@ Examples:
 
 ### Test & Coverage Status
 
-| Branch | CI | Coveralls |
-|--------|----------|---------|
-| `master` | [![CI](https://github.com/essentialkaos/shdoc/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/shdoc/actions) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=master)](https://coveralls.io/github/essentialkaos/shdoc?branch=master) |
-| `develop` | [![CI](https://github.com/essentialkaos/shdoc/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/shdoc/actions) | [![Coverage Status](https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg?branch=develop)](https://coveralls.io/github/essentialkaos/shdoc?branch=develop)
+| Branch | CI       | Coveralls |
+|--------|----------|-----------|
+| `master` | [![CI](https://kaos.sh/w/shdoc/ci.svg?branch=master)](https://kaos.sh/w/shdoc/ci?query=branch:master) | [![Coverage Status](https://kaos.sh/c/shdoc.svg?branch=master)](https://kaos.sh/c/shdoc?branch=master) |
+| `develop` | [![CI](https://kaos.sh/w/shdoc/ci.svg?branch=master)](https://kaos.sh/w/shdoc/ci?query=branch:develop) | [![Coverage Status](https://kaos.sh/c/shdoc.svg?branch=develop)](https://kaos.sh/c/shdoc?branch=develop) |
 
 ### Contributing
 
