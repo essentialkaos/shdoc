@@ -32,7 +32,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.8.0"
+	VER  = "0.8.1"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -438,7 +438,7 @@ func showAbout() {
 		Version:       VER,
 		Desc:          DESC,
 		Year:          2009,
-		Owner:         "Essential Kaos",
+		Owner:         "ESSENTIAL KAOS",
 		License:       "Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>",
 		UpdateChecker: usage.UpdateChecker{"essentialkaos/shdoc", update.GitHubChecker},
 	}
