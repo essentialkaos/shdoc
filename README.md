@@ -37,7 +37,7 @@ go get -u github.com/essentialkaos/shdoc
 
 #### Prebuilt binaries
 
-You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.st/shdoc/latest).
+You can download prebuilt binaries for Linux and macOS from [EK Apps Repository](https://apps.kaos.st/shdoc/latest).
 
 To install the latest prebuilt version of bibop, do:
 

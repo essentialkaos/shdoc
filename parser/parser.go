@@ -2,7 +2,7 @@ package parser
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2020 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2022 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -28,9 +28,9 @@ type EntityType uint8
 
 const (
 	ENT_TYPE_UNKNOWN  EntityType = 0
-	ENT_TYPE_METHOD              = 1
-	ENT_TYPE_VARIABLE            = 2
-	ENT_TYPE_CONSTANT            = 3
+	ENT_TYPE_METHOD   EntityType = 1
+	ENT_TYPE_VARIABLE EntityType = 2
+	ENT_TYPE_CONSTANT EntityType = 3
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -40,9 +40,9 @@ type VariableType uint8
 
 const (
 	VAR_TYPE_UKNOWN  VariableType = 0
-	VAR_TYPE_STRING               = 1
-	VAR_TYPE_NUMBER               = 2
-	VAR_TYPE_BOOLEAN              = 3
+	VAR_TYPE_STRING  VariableType = 1
+	VAR_TYPE_NUMBER  VariableType = 2
+	VAR_TYPE_BOOLEAN VariableType = 3
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -95,6 +95,8 @@ var (
 	typeCommentRegExp = regexp.MustCompile(`^(.*) \((Boolean|String|Number)\)`)
 	methodArgRegExp   = regexp.MustCompile(`([0-9]{1,}|\*):[ ]{0,}(.*)`)
 	negativeValRegexp = regexp.MustCompile(`^((N|n)one|(N|n)o(t|)|(F|f)alse)`)
+
+	shellcheckRegexp = regexp.MustCompile(`\# +shellcheck +disable\=`)
 )
 
 var ignoreTags = []string{"private", "PRIVATE", "-"}
@@ -330,7 +332,7 @@ func readData(file string, reader io.Reader) (*Document, []error) {
 
 		lineNum++
 
-		if lineNum == 1 {
+		if lineNum == 1 || shellcheckRegexp.MatchString(line) {
 			continue
 		}
 
