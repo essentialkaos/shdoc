@@ -23,7 +23,7 @@
 
 #### From source
 
-Make sure you have a working Go 1.16+ workspace ([instructions](https://golang.org/doc/install)), then:
+Make sure you have a working Go 1.17+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get github.com/essentialkaos/shdoc
