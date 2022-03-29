@@ -14,16 +14,16 @@ import (
 	"strings"
 	"text/template"
 
-	"pkg.re/essentialkaos/ek.v12/fmtc"
-	"pkg.re/essentialkaos/ek.v12/fmtutil"
-	"pkg.re/essentialkaos/ek.v12/fsutil"
-	"pkg.re/essentialkaos/ek.v12/options"
-	"pkg.re/essentialkaos/ek.v12/path"
-	"pkg.re/essentialkaos/ek.v12/usage"
-	"pkg.re/essentialkaos/ek.v12/usage/completion/bash"
-	"pkg.re/essentialkaos/ek.v12/usage/completion/fish"
-	"pkg.re/essentialkaos/ek.v12/usage/completion/zsh"
-	"pkg.re/essentialkaos/ek.v12/usage/update"
+	"github.com/essentialkaos/ek/v12/fmtc"
+	"github.com/essentialkaos/ek/v12/fmtutil"
+	"github.com/essentialkaos/ek/v12/fsutil"
+	"github.com/essentialkaos/ek/v12/options"
+	"github.com/essentialkaos/ek/v12/path"
+	"github.com/essentialkaos/ek/v12/usage"
+	"github.com/essentialkaos/ek/v12/usage/completion/bash"
+	"github.com/essentialkaos/ek/v12/usage/completion/fish"
+	"github.com/essentialkaos/ek/v12/usage/completion/zsh"
+	"github.com/essentialkaos/ek/v12/usage/update"
 
 	. "github.com/essentialkaos/shdoc/parser"
 )
@@ -32,7 +32,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.8.1"
+	VER  = "0.9.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
