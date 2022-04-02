@@ -177,7 +177,7 @@ func showUsage() {
 
 // genUsage generates usage info
 func genUsage() *usage.Info {
-	info := usage.NewInfo("", "file")
+	info := usage.NewInfo("", "script")
 
 	info.AddOption(OPT_OUTPUT, "Path to output file", "file")
 	info.AddOption(OPT_TEMPLATE, "Name of template", "name")
@@ -188,17 +188,22 @@ func genUsage() *usage.Info {
 
 	info.AddExample(
 		"script.sh",
-		"Parse shell script and show docs in console",
+		"Parse shell script and show documentation in console",
 	)
 
 	info.AddExample(
 		"script.sh -t markdown -o my_script.md",
-		"Parse shell script and save docs using given export template",
+		"Parse shell script and render documentation to markdown file",
 	)
 
 	info.AddExample(
-		"script.sh someEntity",
-		"Parse shell script and show docs for some constant, variable or method",
+		"script.sh -t /path/to/template.tpl -o my_script.ext",
+		"Parse shell script and render documentation with given template",
+	)
+
+	info.AddExample(
+		"script.sh myFunction",
+		"Parse shell script and show documentation for some constant, variable or method",
 	)
 
 	return info

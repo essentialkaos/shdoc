@@ -23,16 +23,10 @@
 
 #### From source
 
-Make sure you have a working Go 1.17+ workspace ([instructions](https://golang.org/doc/install)), then:
+Make sure you have a working Go 1.17+ workspace ([instructions](https://go.dev/doc/install)), then:
 
 ```
-go get github.com/essentialkaos/shdoc
-```
-
-If you want to update `shdoc` to latest stable release, do:
-
-```
-go get -u github.com/essentialkaos/shdoc
+go install github.com/essentialkaos/shdoc
 ```
 
 #### Prebuilt binaries
@@ -69,7 +63,7 @@ sudo shdoc --completion=fish 1> /usr/share/fish/vendor_completions.d/shdoc.fish
 ### Usage
 
 ```
-Usage: shdoc {options} file
+Usage: shdoc {options} script
 
 Options
 
@@ -80,16 +74,19 @@ Options
   --help, -h             Show this help message
   --version, -v          Show version
 
-Examples:
+Examples
 
   shdoc script.sh
-  Parse shell script and show docs in console
+  Parse shell script and show documentation in console
 
   shdoc script.sh -t markdown -o my_script.md
-  Parse shell script and save docs using given export template
+  Parse shell script and render documentation to markdown file
 
-  shdoc script.sh someEntity
-  Parse shell script and show docs for some constant, variable or method
+  shdoc script.sh -t /path/to/template.tpl -o my_script.ext
+  Parse shell script and render documentation with given template
+
+  shdoc script.sh myFunction
+  Parse shell script and show documentation for some constant, variable or method
 
 ```
 
@@ -98,7 +95,7 @@ Examples:
 | Branch | CI       | Coveralls |
 |--------|----------|-----------|
 | `master` | [![CI](https://kaos.sh/w/shdoc/ci.svg?branch=master)](https://kaos.sh/w/shdoc/ci?query=branch:master) | [![Coverage Status](https://kaos.sh/c/shdoc.svg?branch=master)](https://kaos.sh/c/shdoc?branch=master) |
-| `develop` | [![CI](https://kaos.sh/w/shdoc/ci.svg?branch=master)](https://kaos.sh/w/shdoc/ci?query=branch:develop) | [![Coverage Status](https://kaos.sh/c/shdoc.svg?branch=develop)](https://kaos.sh/c/shdoc?branch=develop) |
+| `develop` | [![CI](https://kaos.sh/w/shdoc/ci.svg?branch=develop)](https://kaos.sh/w/shdoc/ci?query=branch:develop) | [![Coverage Status](https://kaos.sh/c/shdoc.svg?branch=develop)](https://kaos.sh/c/shdoc?branch=develop) |
 
 ### Contributing
 
