@@ -30,7 +30,7 @@ deps: mod-update ## Download dependencies
 deps-test: deps ## Download dependencies for tests
 
 test: ## Run tests
-	go test -covermode=count ./parser
+	go test -covermode=count ./parser ./script
 
 gen-fuzz: ## Generate archives for fuzz testing
 	which go-fuzz-build &>/dev/null || go get -u -v github.com/dvyukov/go-fuzz/go-fuzz-build

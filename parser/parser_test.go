@@ -11,6 +11,8 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/essentialkaos/shdoc/script"
+
 	. "github.com/essentialkaos/check"
 )
 
@@ -226,55 +228,7 @@ func (s *ParseSuite) TestErrors(c *C) {
 
 	c.Assert(doc, IsNil)
 	c.Assert(errs, Not(HasLen), 0)
-
-	var (
-		d *Document
-		a *Argument
-		v *Variable
-		m *Method
-	)
-
-	c.Assert(d.IsValid(), Equals, false)
-	c.Assert(d.HasAbout(), Equals, false)
-	c.Assert(d.HasConstants(), Equals, false)
-	c.Assert(d.HasVariables(), Equals, false)
-	c.Assert(d.HasMethods(), Equals, false)
-
-	c.Assert(a.TypeName(0), Equals, "")
-	c.Assert(a.IsString(), Equals, false)
-	c.Assert(a.IsNumber(), Equals, false)
-	c.Assert(a.IsBoolean(), Equals, false)
-	c.Assert(a.IsUnknown(), Equals, false)
-
-	c.Assert(v.TypeName(0), Equals, "")
-	c.Assert(v.IsString(), Equals, false)
-	c.Assert(v.IsNumber(), Equals, false)
-	c.Assert(v.IsBoolean(), Equals, false)
-	c.Assert(v.IsUnknown(), Equals, false)
-	c.Assert(v.UnitedDesc(), Equals, "")
-
-	c.Assert(m.HasArguments(), Equals, false)
-	c.Assert(m.HasEcho(), Equals, false)
-	c.Assert(m.HasExample(), Equals, false)
-	c.Assert(m.UnitedDesc(), Equals, "")
-}
-
-func (s *ParseSuite) TestDocValidation(c *C) {
-	d1 := &Document{}
-	d2 := &Document{Constants: make([]*Variable, 0)}
-	d3 := &Document{Variables: make([]*Variable, 0)}
-	d4 := &Document{Methods: make([]*Method, 0)}
-	d5 := &Document{Constants: make([]*Variable, 1)}
-	d6 := &Document{Variables: make([]*Variable, 1)}
-	d7 := &Document{Methods: make([]*Method, 1)}
-
-	c.Assert(d1.IsValid(), Equals, false)
-	c.Assert(d2.IsValid(), Equals, false)
-	c.Assert(d3.IsValid(), Equals, false)
-	c.Assert(d4.IsValid(), Equals, false)
-	c.Assert(d5.IsValid(), Equals, true)
-	c.Assert(d6.IsValid(), Equals, true)
-	c.Assert(d7.IsValid(), Equals, true)
+	c.Assert(errs[0], ErrorMatches, "File .*/script1.sh doesn't exist or not accessible")
 }
 
 func (s *ParseSuite) TestParsing(c *C) {
@@ -306,7 +260,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Constants[0], NotNil)
 	c.Assert(doc.Constants[0].Name, Equals, "CONST_1")
 	c.Assert(doc.Constants[0].Desc, DeepEquals, []string{"Constant #1 without type", "Second line of description"})
-	c.Assert(doc.Constants[0].Type, Equals, VariableType(VAR_TYPE_STRING))
+	c.Assert(doc.Constants[0].Type, Equals, script.VariableType(script.VAR_TYPE_STRING))
 	c.Assert(doc.Constants[0].Value, Equals, "\"\"")
 	c.Assert(doc.Constants[0].Line, Equals, 15)
 	c.Assert(doc.Constants[0].UnitedDesc(), Equals, "Constant #1 without type Second line of description")
@@ -323,7 +277,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Constants[1], NotNil)
 	c.Assert(doc.Constants[1].Name, Equals, "CONST_2")
 	c.Assert(doc.Constants[1].Desc, DeepEquals, []string{"Constant #2 without type"})
-	c.Assert(doc.Constants[1].Type, Equals, VariableType(VAR_TYPE_NUMBER))
+	c.Assert(doc.Constants[1].Type, Equals, script.VariableType(script.VAR_TYPE_NUMBER))
 	c.Assert(doc.Constants[1].Value, Equals, "0")
 	c.Assert(doc.Constants[1].Line, Equals, 18)
 	c.Assert(doc.Constants[1].UnitedDesc(), Equals, "Constant #2 without type")
@@ -340,7 +294,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Constants[2], NotNil)
 	c.Assert(doc.Constants[2].Name, Equals, "CONST_3")
 	c.Assert(doc.Constants[2].Desc, DeepEquals, []string{"Constant #3 without type"})
-	c.Assert(doc.Constants[2].Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
+	c.Assert(doc.Constants[2].Type, Equals, script.VariableType(script.VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Constants[2].Value, Equals, "true")
 	c.Assert(doc.Constants[2].Line, Equals, 21)
 	c.Assert(doc.Constants[2].UnitedDesc(), Equals, "Constant #3 without type")
@@ -357,21 +311,21 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Constants[3], NotNil)
 	c.Assert(doc.Constants[3].Name, Equals, "CONST_4")
 	c.Assert(doc.Constants[3].Desc, DeepEquals, []string{"Constant #4 with type"})
-	c.Assert(doc.Constants[3].Type, Equals, VariableType(VAR_TYPE_STRING))
+	c.Assert(doc.Constants[3].Type, Equals, script.VariableType(script.VAR_TYPE_STRING))
 	c.Assert(doc.Constants[3].Value, Equals, "\"\"")
 	c.Assert(doc.Constants[3].Line, Equals, 24)
 
 	c.Assert(doc.Constants[4], NotNil)
 	c.Assert(doc.Constants[4].Name, Equals, "CONST_5")
 	c.Assert(doc.Constants[4].Desc, DeepEquals, []string{"Constant #5 with type"})
-	c.Assert(doc.Constants[4].Type, Equals, VariableType(VAR_TYPE_NUMBER))
+	c.Assert(doc.Constants[4].Type, Equals, script.VariableType(script.VAR_TYPE_NUMBER))
 	c.Assert(doc.Constants[4].Value, Equals, "\"\"")
 	c.Assert(doc.Constants[4].Line, Equals, 27)
 
 	c.Assert(doc.Constants[5], NotNil)
 	c.Assert(doc.Constants[5].Name, Equals, "CONST_6")
 	c.Assert(doc.Constants[5].Desc, DeepEquals, []string{"Constant #6 with type"})
-	c.Assert(doc.Constants[5].Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
+	c.Assert(doc.Constants[5].Type, Equals, script.VariableType(script.VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Constants[5].Value, Equals, "\"\"")
 	c.Assert(doc.Constants[5].Line, Equals, 30)
 
@@ -380,7 +334,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[0], NotNil)
 	c.Assert(doc.Variables[0].Name, Equals, "var_1")
 	c.Assert(doc.Variables[0].Desc, DeepEquals, []string{"Variable #1 without type", "Second line of description"})
-	c.Assert(doc.Variables[0].Type, Equals, VariableType(VAR_TYPE_STRING))
+	c.Assert(doc.Variables[0].Type, Equals, script.VariableType(script.VAR_TYPE_STRING))
 	c.Assert(doc.Variables[0].Value, Equals, "\"\"")
 	c.Assert(doc.Variables[0].Line, Equals, 40)
 	c.Assert(doc.Variables[0].UnitedDesc(), Equals, "Variable #1 without type Second line of description")
@@ -397,7 +351,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[1], NotNil)
 	c.Assert(doc.Variables[1].Name, Equals, "var_2")
 	c.Assert(doc.Variables[1].Desc, DeepEquals, []string{"Variable #2 without type"})
-	c.Assert(doc.Variables[1].Type, Equals, VariableType(VAR_TYPE_NUMBER))
+	c.Assert(doc.Variables[1].Type, Equals, script.VariableType(script.VAR_TYPE_NUMBER))
 	c.Assert(doc.Variables[1].Value, Equals, "1")
 	c.Assert(doc.Variables[1].Line, Equals, 43)
 	c.Assert(doc.Variables[1].UnitedDesc(), Equals, "Variable #2 without type")
@@ -414,7 +368,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[2], NotNil)
 	c.Assert(doc.Variables[2].Name, Equals, "var_3")
 	c.Assert(doc.Variables[2].Desc, DeepEquals, []string{"Variable #3 without type"})
-	c.Assert(doc.Variables[2].Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
+	c.Assert(doc.Variables[2].Type, Equals, script.VariableType(script.VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Variables[2].Value, Equals, "true")
 	c.Assert(doc.Variables[2].Line, Equals, 46)
 	c.Assert(doc.Variables[2].UnitedDesc(), Equals, "Variable #3 without type")
@@ -431,28 +385,28 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[3], NotNil)
 	c.Assert(doc.Variables[3].Name, Equals, "var_4")
 	c.Assert(doc.Variables[3].Desc, DeepEquals, []string{"Variable #4 with type"})
-	c.Assert(doc.Variables[3].Type, Equals, VariableType(VAR_TYPE_STRING))
+	c.Assert(doc.Variables[3].Type, Equals, script.VariableType(script.VAR_TYPE_STRING))
 	c.Assert(doc.Variables[3].Value, Equals, "\"\"")
 	c.Assert(doc.Variables[3].Line, Equals, 49)
 
 	c.Assert(doc.Variables[4], NotNil)
 	c.Assert(doc.Variables[4].Name, Equals, "var_5")
 	c.Assert(doc.Variables[4].Desc, DeepEquals, []string{"Variable #5 with type"})
-	c.Assert(doc.Variables[4].Type, Equals, VariableType(VAR_TYPE_NUMBER))
+	c.Assert(doc.Variables[4].Type, Equals, script.VariableType(script.VAR_TYPE_NUMBER))
 	c.Assert(doc.Variables[4].Value, Equals, "\"\"")
 	c.Assert(doc.Variables[4].Line, Equals, 52)
 
 	c.Assert(doc.Variables[5], NotNil)
 	c.Assert(doc.Variables[5].Name, Equals, "var_6")
 	c.Assert(doc.Variables[5].Desc, DeepEquals, []string{"Variable #6 with type"})
-	c.Assert(doc.Variables[5].Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
+	c.Assert(doc.Variables[5].Type, Equals, script.VariableType(script.VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Variables[5].Value, Equals, "\"\"")
 	c.Assert(doc.Variables[5].Line, Equals, 55)
 
 	c.Assert(doc.Variables[6], NotNil)
 	c.Assert(doc.Variables[6].Name, Equals, "var_7")
 	c.Assert(doc.Variables[6].Desc, DeepEquals, []string{"Variable #7 without value"})
-	c.Assert(doc.Variables[6].Type, Equals, VariableType(VAR_TYPE_UKNOWN))
+	c.Assert(doc.Variables[6].Type, Equals, script.VariableType(script.VAR_TYPE_UKNOWN))
 	c.Assert(doc.Variables[6].Value, Equals, "")
 	c.Assert(doc.Variables[6].Line, Equals, 59)
 	c.Assert(doc.Variables[6].TypeName(0), Equals, "")
@@ -464,7 +418,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[7], NotNil)
 	c.Assert(doc.Variables[7].Name, Equals, "var_8")
 	c.Assert(doc.Variables[7].Desc, DeepEquals, []string{"Variable #8 with multiline value"})
-	c.Assert(doc.Variables[7].Type, Equals, VariableType(VAR_TYPE_STRING))
+	c.Assert(doc.Variables[7].Type, Equals, script.VariableType(script.VAR_TYPE_STRING))
 	c.Assert(doc.Variables[7].Value, Equals, "\"This is multiline value\"")
 	c.Assert(doc.Variables[7].Line, Equals, 62)
 	c.Assert(doc.Variables[7].IsString(), Equals, true)
@@ -506,7 +460,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].Arguments[0], NotNil)
 	c.Assert(doc.Methods[1].Arguments[0].Index, Equals, "1")
 	c.Assert(doc.Methods[1].Arguments[0].Desc, Equals, "First argument")
-	c.Assert(doc.Methods[1].Arguments[0].Type, Equals, VariableType(VAR_TYPE_STRING))
+	c.Assert(doc.Methods[1].Arguments[0].Type, Equals, script.VariableType(script.VAR_TYPE_STRING))
 	c.Assert(doc.Methods[1].Arguments[0].IsOptional, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[0].IsWildcard, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[0].TypeName(0), Equals, "String")
@@ -522,7 +476,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].Arguments[1], NotNil)
 	c.Assert(doc.Methods[1].Arguments[1].Index, Equals, "2")
 	c.Assert(doc.Methods[1].Arguments[1].Desc, Equals, "Second argument")
-	c.Assert(doc.Methods[1].Arguments[1].Type, Equals, VariableType(VAR_TYPE_NUMBER))
+	c.Assert(doc.Methods[1].Arguments[1].Type, Equals, script.VariableType(script.VAR_TYPE_NUMBER))
 	c.Assert(doc.Methods[1].Arguments[1].IsOptional, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[1].IsWildcard, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[1].TypeName(0), Equals, "Number")
@@ -538,7 +492,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].Arguments[2], NotNil)
 	c.Assert(doc.Methods[1].Arguments[2].Index, Equals, "3")
 	c.Assert(doc.Methods[1].Arguments[2].Desc, Equals, "Third argument")
-	c.Assert(doc.Methods[1].Arguments[2].Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
+	c.Assert(doc.Methods[1].Arguments[2].Type, Equals, script.VariableType(script.VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Methods[1].Arguments[2].IsOptional, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[2].IsWildcard, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[2].TypeName(0), Equals, "Boolean")
@@ -554,7 +508,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].Arguments[3], NotNil)
 	c.Assert(doc.Methods[1].Arguments[3].Index, Equals, "*")
 	c.Assert(doc.Methods[1].Arguments[3].Desc, Equals, "Wildcard argument")
-	c.Assert(doc.Methods[1].Arguments[3].Type, Equals, VariableType(VAR_TYPE_UKNOWN))
+	c.Assert(doc.Methods[1].Arguments[3].Type, Equals, script.VariableType(script.VAR_TYPE_UKNOWN))
 	c.Assert(doc.Methods[1].Arguments[3].IsOptional, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[3].IsWildcard, Equals, true)
 	c.Assert(doc.Methods[1].Arguments[3].TypeName(0), Equals, "")
@@ -570,7 +524,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].ResultCode, Equals, true)
 	c.Assert(doc.Methods[1].ResultEcho, NotNil)
 	c.Assert(doc.Methods[1].ResultEcho.Desc, DeepEquals, []string{"Magic value"})
-	c.Assert(doc.Methods[1].ResultEcho.Type, Equals, VariableType(VAR_TYPE_BOOLEAN))
+	c.Assert(doc.Methods[1].ResultEcho.Type, Equals, script.VariableType(script.VAR_TYPE_BOOLEAN))
 	c.Assert(doc.Methods[1].Example, HasLen, 3)
 	c.Assert(doc.Methods[1].Example[0], Equals, "if [[ -f $file ]] ; then")
 	c.Assert(doc.Methods[1].Example[1], Equals, "  method2 123")
@@ -588,7 +542,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[2].Arguments[0], NotNil)
 	c.Assert(doc.Methods[2].Arguments[0].Index, Equals, "1")
 	c.Assert(doc.Methods[2].Arguments[0].Desc, Equals, "First argument")
-	c.Assert(doc.Methods[2].Arguments[0].Type, Equals, VariableType(VAR_TYPE_STRING))
+	c.Assert(doc.Methods[2].Arguments[0].Type, Equals, script.VariableType(script.VAR_TYPE_STRING))
 	c.Assert(doc.Methods[2].Arguments[0].IsOptional, Equals, true)
 	c.Assert(doc.Methods[2].Arguments[0].IsWildcard, Equals, false)
 	c.Assert(doc.Methods[2].ResultCode, Equals, false)
@@ -646,7 +600,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[6].Arguments[0], NotNil)
 	c.Assert(doc.Methods[6].Arguments[0].Index, Equals, "1")
 	c.Assert(doc.Methods[6].Arguments[0].Desc, Equals, "First argument")
-	c.Assert(doc.Methods[6].Arguments[0].Type, Equals, VariableType(VAR_TYPE_UKNOWN))
+	c.Assert(doc.Methods[6].Arguments[0].Type, Equals, script.VariableType(script.VAR_TYPE_UKNOWN))
 	c.Assert(doc.Methods[6].Arguments[0].IsOptional, Equals, false)
 	c.Assert(doc.Methods[6].Arguments[0].IsWildcard, Equals, false)
 	c.Assert(doc.Methods[6].ResultCode, Equals, false)
