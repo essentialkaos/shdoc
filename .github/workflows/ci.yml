@@ -49,7 +49,7 @@ jobs:
 
       - name: Run tests
         working-directory: ${{env.SRC_DIR}}
-        run: go test -covermode count -coverprofile cover.out ./parser
+        run: go test -covermode count -coverprofile cover.out ./parser ./script
 
       - name: Install goveralls
         env:
