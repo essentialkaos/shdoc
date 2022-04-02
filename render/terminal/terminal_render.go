@@ -8,6 +8,7 @@ package terminal
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/essentialkaos/ek/v12/fmtc"
@@ -18,9 +19,13 @@ import (
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+var varExtractRegex = regexp.MustCompile(`\$\{*[^\}\n\r]+\}*`)
+
+// ////////////////////////////////////////////////////////////////////////////////// //
+
 // Render prints script info into terminal
 func Render(doc *script.Document, pattern string) error {
-	if pattern == "" {
+	if pattern != "" {
 		renderPart(doc, pattern)
 	} else {
 		renderAll(doc)
@@ -78,7 +83,7 @@ func renderAll(doc *script.Document) {
 			renderMethod(m, false)
 
 			if i < totalMethods-1 {
-				fmtc.NewLine()
+				fmtc.Println("\n{s-}" + strings.Repeat("-", 88) + "{!}")
 				fmtc.NewLine()
 			}
 		}
@@ -121,19 +126,19 @@ func renderPart(doc *script.Document, pattern string) {
 
 // renderConstant prints constant info to console
 func renderConstant(c *script.Variable) {
-	fmtc.Printf("{s-}%4d:{!} {m*}%s{!} {s}={!} %s "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name, c.Value)
+	fmtc.Printf("{s}%4d:{!} {m*}%s{!} {s}={!} "+colorizeValue(c.Value)+" "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name)
 	fmtc.Printf("      %s\n", c.UnitedDesc())
 }
 
 // renderMethod prints variable info to console
 func renderVariable(v *script.Variable) {
-	fmtc.Printf("{s-}%4d:{!} {c*}%s{!} {s}={!} %s "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name, v.Value)
+	fmtc.Printf("{s}%4d:{!} {c*}%s{!} {s}={!} "+colorizeValue(v.Value)+" "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name)
 	fmtc.Printf("      %s\n", v.UnitedDesc())
 }
 
 // renderMethod prints method info to console
 func renderMethod(m *script.Method, showExamples bool) {
-	fmtc.Printf("{s-}%4d:{!} {b*}%s{!} {s}-{!} %s\n", m.Line, m.Name, m.UnitedDesc())
+	fmtc.Printf("{s}%4d:{!} {b*}%s{!} {s}-{!} %s\n", m.Line, m.Name, m.UnitedDesc())
 
 	if len(m.Arguments) != 0 {
 		fmtc.NewLine()
@@ -152,7 +157,7 @@ func renderMethod(m *script.Method, showExamples bool) {
 
 	if m.ResultCode {
 		fmtc.NewLine()
-		fmtc.Printf("  {*}Code:{!} 0 - ok, 1 - not ok\n")
+		fmtc.Printf("    {*}Code:{!} 0 - ok, 1 - not ok\n")
 	}
 
 	if m.ResultEcho != nil {
@@ -166,9 +171,20 @@ func renderMethod(m *script.Method, showExamples bool) {
 		fmtc.NewLine()
 
 		for _, l := range m.Example {
-			fmtc.Printf("    %s\n", l)
+			fmtc.Printf("    {s}%s{!}\n", l)
 		}
 	}
+}
+
+// colorizeValue adds color tags based on variable value
+func colorizeValue(value string) string {
+	if !varExtractRegex.MatchString(value) {
+		return value
+	}
+
+	return varExtractRegex.ReplaceAllStringFunc(value, func(v string) string {
+		return "{g}" + v + "{!}"
+	})
 }
 
 // getVarTypeDesc returns type description
