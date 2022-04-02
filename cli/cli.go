@@ -9,30 +9,27 @@ package cli
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-	"strings"
-	"text/template"
 
-	"pkg.re/essentialkaos/ek.v12/fmtc"
-	"pkg.re/essentialkaos/ek.v12/fmtutil"
-	"pkg.re/essentialkaos/ek.v12/fsutil"
-	"pkg.re/essentialkaos/ek.v12/options"
-	"pkg.re/essentialkaos/ek.v12/path"
-	"pkg.re/essentialkaos/ek.v12/usage"
-	"pkg.re/essentialkaos/ek.v12/usage/completion/bash"
-	"pkg.re/essentialkaos/ek.v12/usage/completion/fish"
-	"pkg.re/essentialkaos/ek.v12/usage/completion/zsh"
-	"pkg.re/essentialkaos/ek.v12/usage/update"
+	"github.com/essentialkaos/ek/v12/fmtc"
+	"github.com/essentialkaos/ek/v12/fsutil"
+	"github.com/essentialkaos/ek/v12/options"
+	"github.com/essentialkaos/ek/v12/usage"
+	"github.com/essentialkaos/ek/v12/usage/completion/bash"
+	"github.com/essentialkaos/ek/v12/usage/completion/fish"
+	"github.com/essentialkaos/ek/v12/usage/completion/zsh"
+	"github.com/essentialkaos/ek/v12/usage/update"
 
-	. "github.com/essentialkaos/shdoc/parser"
+	"github.com/essentialkaos/shdoc/parser"
+	"github.com/essentialkaos/shdoc/render/template"
+	"github.com/essentialkaos/shdoc/render/terminal"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.8.1"
+	VER  = "0.9.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -108,32 +105,20 @@ func Init() {
 
 // process starts source processing
 func process(file string, pattern string) {
-	if !fsutil.IsExist(file) {
-		printErrorAndExit("File %s does not exist", file)
+	err := fsutil.ValidatePerms("FRS", file)
+
+	if err != nil {
+		printErrorAndExit(err.Error())
 	}
 
-	if !fsutil.IsReadable(file) {
-		printErrorAndExit("File %s is not readable", file)
-	}
-
-	if !fsutil.IsNonEmpty(file) {
-		printErrorAndExit("File %s is empty", file)
-	}
-
-	doc, errs := Parse(file)
+	doc, errs := parser.Parse(file)
 
 	if len(errs) != 0 {
-		printError("Shell script docs parsing errors:")
-
-		for _, err := range errs {
-			printError("  %s", err.Error())
-		}
-
-		os.Exit(1)
+		printErrorsAndExit(errs)
 	}
 
 	if !doc.IsValid() {
-		printWarn("File %s doesn't contains documentation", file)
+		printWarn("File %s doesn't contains any documentation", file)
 		os.Exit(2)
 	}
 
@@ -142,222 +127,17 @@ func process(file string, pattern string) {
 	}
 
 	if options.GetS(OPT_OUTPUT) == "" {
-		if pattern == "" {
-			simpleRender(doc)
-		} else {
-			findInfo(doc, pattern)
-		}
+		err = terminal.Render(doc, pattern)
 	} else {
-		renderTemplate(doc)
+		err = template.Render(
+			doc,
+			options.GetS(OPT_TEMPLATE),
+			options.GetS(OPT_OUTPUT),
+		)
 	}
-}
-
-// findInfo searches geven pattern in entities names
-func findInfo(doc *Document, pattern string) {
-	fmtc.NewLine()
-
-	if doc.Constants != nil {
-		for _, c := range doc.Constants {
-			if strings.Contains(c.Name, pattern) {
-				renderConstant(c)
-				fmtc.NewLine()
-			}
-		}
-	}
-
-	if doc.Variables != nil {
-		for _, v := range doc.Variables {
-			if strings.Contains(v.Name, pattern) {
-				renderVariable(v)
-				fmtc.NewLine()
-			}
-		}
-	}
-
-	if doc.Methods != nil {
-		for _, m := range doc.Methods {
-			if strings.Contains(m.Name, pattern) {
-				renderMethod(m, true)
-				fmtc.NewLine()
-			}
-		}
-	}
-}
-
-// simpleRender prints all document info to console
-func simpleRender(doc *Document) {
-	if doc.HasAbout() {
-		fmtutil.Separator(false, "ABOUT")
-
-		for _, l := range doc.About {
-			fmtc.Printf("  %s\n", l)
-		}
-	}
-
-	if doc.HasConstants() {
-		fmtutil.Separator(false, "CONSTANTS")
-
-		totalConstants := len(doc.Constants)
-
-		for i, c := range doc.Constants {
-			renderConstant(c)
-
-			if i < totalConstants-1 {
-				fmtc.NewLine()
-			}
-		}
-	}
-
-	if doc.HasVariables() {
-		fmtutil.Separator(false, "GLOBAL VARIABLES")
-
-		totalVariables := len(doc.Variables)
-
-		for i, v := range doc.Variables {
-			renderVariable(v)
-
-			if i < totalVariables-1 {
-				fmtc.NewLine()
-			}
-		}
-	}
-
-	if doc.HasMethods() {
-		fmtutil.Separator(false, "METHODS")
-
-		totalMethods := len(doc.Methods)
-
-		for i, m := range doc.Methods {
-			renderMethod(m, false)
-
-			if i < totalMethods-1 {
-				fmtc.NewLine()
-				fmtc.NewLine()
-			}
-		}
-	}
-
-	fmtutil.Separator(false)
-}
-
-// renderTemplate reads template and render to file
-func renderTemplate(doc *Document) {
-	projectDir := os.Getenv("GOPATH")
-	templateFile := path.Join(
-		projectDir, "src/github.com/essentialkaos/shdoc/templates",
-		options.GetS(OPT_TEMPLATE)+".tpl",
-	)
-
-	if !fsutil.CheckPerms("FRS", templateFile) {
-		printErrorAndExit("Can't read template %s - file does not exist or empty", templateFile)
-	}
-
-	outputFile := options.GetS(OPT_OUTPUT)
-
-	if fsutil.IsExist(outputFile) {
-		os.Remove(outputFile)
-	}
-
-	fd, err := os.OpenFile(outputFile, os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
 		printErrorAndExit(err.Error())
-	}
-
-	defer fd.Close()
-
-	tpl, err := ioutil.ReadFile(templateFile)
-
-	if err != nil {
-		printErrorAndExit(err.Error())
-	}
-
-	t := template.New("Template")
-	t, err = t.Parse(string(tpl[:]))
-
-	err = t.Execute(fd, doc)
-
-	if err != nil {
-		printErrorAndExit(err.Error())
-	}
-
-	fmtutil.Separator(false, doc.Title)
-
-	fmtc.Printf("  {*}Constants:{!} %d\n", len(doc.Constants))
-	fmtc.Printf("  {*}Variables:{!} %d\n", len(doc.Variables))
-	fmtc.Printf("  {*}Methods:{!}   %d\n", len(doc.Methods))
-	fmtc.NewLine()
-	fmtc.Printf(
-		"  {*}Output:{!} %s {s-}(%s){!}\n", outputFile,
-		fmtutil.PrettySize(fsutil.GetSize(outputFile)),
-	)
-
-	fmtutil.Separator(false)
-}
-
-// renderConstant prints constant info to console
-func renderConstant(c *Variable) {
-	fmtc.Printf("{s-}%4d:{!} {m*}%s{!} {s}={!} %s "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name, c.Value)
-	fmtc.Printf("      %s\n", c.UnitedDesc())
-}
-
-// renderMethod prints variable info to console
-func renderVariable(v *Variable) {
-	fmtc.Printf("{s-}%4d:{!} {c*}%s{!} {s}={!} %s "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name, v.Value)
-	fmtc.Printf("      %s\n", v.UnitedDesc())
-}
-
-// renderMethod prints method info to console
-func renderMethod(m *Method, showExamples bool) {
-	fmtc.Printf("{s-}%4d:{!} {b*}%s{!} {s}-{!} %s\n", m.Line, m.Name, m.UnitedDesc())
-
-	if len(m.Arguments) != 0 {
-		fmtc.NewLine()
-
-		for _, a := range m.Arguments {
-			switch {
-			case a.IsOptional:
-				fmtc.Printf("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type)+" {s-}[Optional]{!}\n", a.Index, a.Desc)
-			case a.IsWildcard:
-				fmtc.Printf("  {s-}%2s.{!} %s\n", a.Index, a.Desc)
-			default:
-				fmtc.Printf("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type)+"\n", a.Index, a.Desc)
-			}
-		}
-	}
-
-	if m.ResultCode {
-		fmtc.NewLine()
-		fmtc.Printf("  {*}Code:{!} 0 - ok, 1 - not ok\n")
-	}
-
-	if m.ResultEcho != nil {
-		fmtc.NewLine()
-		fmtc.Printf("  {*}Echo:{!} %s "+getVarTypeDesc(m.ResultEcho.Type)+"\n", strings.Join(m.ResultEcho.Desc, " "))
-	}
-
-	if m.Example != nil && showExamples {
-		fmtc.NewLine()
-		fmtc.Println("  {*}Example:{!}")
-		fmtc.NewLine()
-
-		for _, l := range m.Example {
-			fmtc.Printf("    %s\n", l)
-		}
-	}
-}
-
-// getVarTypeDesc returns type description
-func getVarTypeDesc(t VariableType) string {
-	switch t {
-	case VAR_TYPE_STRING:
-		return "{b}(String){!}"
-	case VAR_TYPE_NUMBER:
-		return "{y}(Number){!}"
-	case VAR_TYPE_BOOLEAN:
-		return "{g}(Boolean){!}"
-	default:
-		return ""
 	}
 }
 
@@ -369,6 +149,17 @@ func printError(f string, a ...interface{}) {
 // printError prints warning message to console
 func printWarn(f string, a ...interface{}) {
 	fmtc.Fprintf(os.Stderr, "{y}"+f+"{!}\n", a...)
+}
+
+// printErrorsAndExit prints errors and exit with exit code 1
+func printErrorsAndExit(errs []error) {
+	printError("Shell script docs parsing errors:")
+
+	for _, err := range errs {
+		printError("  %s", err.Error())
+	}
+
+	os.Exit(1)
 }
 
 // printErrorAndExit prints error mesage and exit with exit code 1
@@ -386,7 +177,7 @@ func showUsage() {
 
 // genUsage generates usage info
 func genUsage() *usage.Info {
-	info := usage.NewInfo("", "file")
+	info := usage.NewInfo("", "script")
 
 	info.AddOption(OPT_OUTPUT, "Path to output file", "file")
 	info.AddOption(OPT_TEMPLATE, "Name of template", "name")
@@ -397,17 +188,22 @@ func genUsage() *usage.Info {
 
 	info.AddExample(
 		"script.sh",
-		"Parse shell script and show docs in console",
+		"Parse shell script and show documentation in console",
 	)
 
 	info.AddExample(
 		"script.sh -t markdown -o my_script.md",
-		"Parse shell script and save docs using given export template",
+		"Parse shell script and render documentation to markdown file",
 	)
 
 	info.AddExample(
-		"script.sh someEntity",
-		"Parse shell script and show docs for some constant, variable or method",
+		"script.sh -t /path/to/template.tpl -o my_script.ext",
+		"Parse shell script and render documentation with given template",
+	)
+
+	info.AddExample(
+		"script.sh myFunction",
+		"Parse shell script and show documentation for some constant, variable or method",
 	)
 
 	return info

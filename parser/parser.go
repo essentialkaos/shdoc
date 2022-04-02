@@ -9,17 +9,17 @@ package parser
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 
-	"pkg.re/essentialkaos/ek.v12/fsutil"
-	"pkg.re/essentialkaos/ek.v12/mathutil"
-	"pkg.re/essentialkaos/ek.v12/sliceutil"
-	"pkg.re/essentialkaos/ek.v12/strutil"
+	"github.com/essentialkaos/ek/v12/fsutil"
+	"github.com/essentialkaos/ek/v12/sliceutil"
+	"github.com/essentialkaos/ek/v12/strutil"
+
+	"github.com/essentialkaos/shdoc/script"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -32,58 +32,6 @@ const (
 	ENT_TYPE_VARIABLE EntityType = 2
 	ENT_TYPE_CONSTANT EntityType = 3
 )
-
-// ////////////////////////////////////////////////////////////////////////////////// //
-
-// VariableType contains variable type
-type VariableType uint8
-
-const (
-	VAR_TYPE_UKNOWN  VariableType = 0
-	VAR_TYPE_STRING  VariableType = 1
-	VAR_TYPE_NUMBER  VariableType = 2
-	VAR_TYPE_BOOLEAN VariableType = 3
-)
-
-// ////////////////////////////////////////////////////////////////////////////////// //
-
-// Method contains info about method
-type Method struct {
-	Name       string      `json:"name"`        // Name
-	Desc       []string    `json:"desc"`        // Description
-	Arguments  []*Argument `json:"arguments"`   // Arguments
-	ResultCode bool        `json:"result_code"` // Method uses exit codes
-	ResultEcho *Variable   `json:"result_echo"` // Return argument
-	Example    []string    `json:"example"`     // Example
-	Line       int         `json:"line"`        // LOC of definition
-}
-
-// Argument contains info about method argument
-type Argument struct {
-	Index      string       `json:"index"`    // Index
-	Desc       string       `json:"desc"`     // Desc
-	Type       VariableType `json:"type"`     // Type
-	IsOptional bool         `json:"optional"` // Optional
-	IsWildcard bool         `json:"wildcard"` // Wilcard
-}
-
-// Variable contains info about variable
-type Variable struct {
-	Name  string       `json:"name"`  // Name
-	Desc  []string     `json:"desc"`  // Description
-	Type  VariableType `json:"type"`  // Type
-	Value string       `json:"value"` // Value
-	Line  int          `json:"line"`  // LOC of definition
-}
-
-// Document contains info about all constants, global variables and methods
-type Document struct {
-	Title     string      `json:"title"`
-	About     []string    `json:"about"`
-	Constants []*Variable `json:"constants"`
-	Variables []*Variable `json:"variables"`
-	Methods   []*Method   `json:"methods"`
-}
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -103,204 +51,12 @@ var ignoreTags = []string{"private", "PRIVATE", "-"}
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// IsValid return false if document is nil or doesn't have any content
-func (d *Document) IsValid() bool {
-	if d == nil {
-		return false
-	}
-
-	if d.Constants != nil && len(d.Constants) != 0 {
-		return true
-	}
-
-	if d.Variables != nil && len(d.Variables) != 0 {
-		return true
-	}
-
-	if d.Methods != nil && len(d.Methods) != 0 {
-		return true
-	}
-
-	return false
-}
-
-// HasAbout return true if about is present
-func (d *Document) HasAbout() bool {
-	if d == nil {
-		return false
-	}
-
-	return d.About != nil
-}
-
-// HasConstants return true if doc has constants info
-func (d *Document) HasConstants() bool {
-	if d == nil {
-		return false
-	}
-
-	return d.Constants != nil
-}
-
-// HasVariables return true if doc has global variables info
-func (d *Document) HasVariables() bool {
-	if d == nil {
-		return false
-	}
-
-	return d.Variables != nil
-}
-
-// HasMethods return true if doc has methods info
-func (d *Document) HasMethods() bool {
-	if d == nil {
-		return false
-	}
-
-	return d.Methods != nil
-}
-
-// TypeDesc return type description
-func (a *Argument) TypeName(mod int) string {
-	if a == nil {
-		return ""
-	}
-
-	return getTypeName(a.Type, mod)
-}
-
-// IsString return true if type is string
-func (a *Argument) IsString() bool {
-	if a == nil {
-		return false
-	}
-
-	return a.Type == VAR_TYPE_STRING
-}
-
-// IsNumber return true if type is number
-func (a *Argument) IsNumber() bool {
-	if a == nil {
-		return false
-	}
-
-	return a.Type == VAR_TYPE_NUMBER
-}
-
-// IsBoolean return true if type is boolean
-func (a *Argument) IsBoolean() bool {
-	if a == nil {
-		return false
-	}
-
-	return a.Type == VAR_TYPE_BOOLEAN
-}
-
-// IsUnknown return true if type is unknown
-func (a *Argument) IsUnknown() bool {
-	if a == nil {
-		return false
-	}
-
-	return a.Type == VAR_TYPE_UKNOWN
-}
-
-// TypeDesc return type description
-func (v *Variable) TypeName(mod int) string {
-	if v == nil {
-		return ""
-	}
-
-	return getTypeName(v.Type, mod)
-}
-
-// IsString return true if type is string
-func (v *Variable) IsString() bool {
-	if v == nil {
-		return false
-	}
-
-	return v.Type == VAR_TYPE_STRING
-}
-
-// IsNumber return true if type is number
-func (v *Variable) IsNumber() bool {
-	if v == nil {
-		return false
-	}
-
-	return v.Type == VAR_TYPE_NUMBER
-}
-
-// IsBoolean return true if type is boolean
-func (v *Variable) IsBoolean() bool {
-	if v == nil {
-		return false
-	}
-
-	return v.Type == VAR_TYPE_BOOLEAN
-}
-
-// IsUnknown return true if type is unknown
-func (v *Variable) IsUnknown() bool {
-	if v == nil {
-		return false
-	}
-
-	return v.Type == VAR_TYPE_UKNOWN
-}
-
-// UnitedDesc return united description string
-func (v *Variable) UnitedDesc() string {
-	if v == nil {
-		return ""
-	}
-
-	return mergeDesc(v.Desc)
-}
-
-// HasArguments return true if method has arguments
-func (m *Method) HasArguments() bool {
-	if m == nil {
-		return false
-	}
-
-	return m.Arguments != nil
-}
-
-// HasEcho return true if method echoed some data
-func (m *Method) HasEcho() bool {
-	if m == nil {
-		return false
-	}
-
-	return m.ResultEcho != nil
-}
-
-// HasExample return true if method has code usage example
-func (m *Method) HasExample() bool {
-	if m == nil {
-		return false
-	}
-
-	return m.Example != nil
-}
-
-// UnitedDesc return united description string
-func (m *Method) UnitedDesc() string {
-	if m == nil {
-		return ""
-	}
-
-	return mergeDesc(m.Desc)
-}
-
-// ////////////////////////////////////////////////////////////////////////////////// //
-
 // Parse method parse given file and return document struct and slice with errors
-func Parse(file string) (*Document, []error) {
-	if !fsutil.CheckPerms("FR", file) {
-		return nil, []error{fmt.Errorf("File %s is not readable or not exist", file)}
+func Parse(file string) (*script.Document, []error) {
+	err := fsutil.ValidatePerms("FRS", file)
+
+	if err != nil {
+		return nil, []error{err}
 	}
 
 	fd, err := os.Open(file)
@@ -317,14 +73,14 @@ func Parse(file string) (*Document, []error) {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // readData read data
-func readData(file string, reader io.Reader) (*Document, []error) {
+func readData(file string, reader io.Reader) (*script.Document, []error) {
 	scanner := bufio.NewScanner(reader)
 
 	var buffer []string
 	var methodsSection bool
+	var lineNum int
 
-	lineNum := 0
-	doc := &Document{Title: filepath.Base(file)}
+	doc := &script.Document{Title: filepath.Base(file)}
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -456,19 +212,19 @@ func parseEntity(data string) (EntityType, string, string) {
 
 // parseVariableComment method parse variable comment data and return
 // variable struct
-func parseVariableComment(name, value string, data []string) *Variable {
+func parseVariableComment(name, value string, data []string) *script.Variable {
 	if len(data) == 0 || sliceutil.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 
-	variable := &Variable{
+	variable := &script.Variable{
 		Name:  name,
 		Value: value,
 	}
 
 	data, t := getVariableType(data)
 
-	if t == VAR_TYPE_UKNOWN {
+	if t == script.VAR_TYPE_UKNOWN {
 		t = guessVariableType(value)
 	}
 
@@ -480,12 +236,12 @@ func parseVariableComment(name, value string, data []string) *Variable {
 
 // parseMethodComment method parse method comment data and return
 // method struct
-func parseMethodComment(name string, data []string) *Method {
+func parseMethodComment(name string, data []string) *script.Method {
 	if len(data) == 0 || sliceutil.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 
-	method := &Method{Name: name}
+	method := &script.Method{Name: name}
 
 	for index, line := range data {
 		if methodArgRegExp.MatchString(line) {
@@ -554,8 +310,8 @@ func extractMethodDesc(data []string, index int) []string {
 
 // parseArgumentComment method parse given comment data and return
 // argument struct
-func parseArgumentComment(data string) *Argument {
-	argument := &Argument{}
+func parseArgumentComment(data string) *script.Argument {
+	argument := &script.Argument{}
 
 	ar := methodArgRegExp.FindStringSubmatch(data)
 
@@ -572,11 +328,11 @@ func parseArgumentComment(data string) *Argument {
 	for _, word := range ds {
 		switch word {
 		case "(Boolean)":
-			argument.Type = VAR_TYPE_BOOLEAN
+			argument.Type = script.VAR_TYPE_BOOLEAN
 		case "(Number)":
-			argument.Type = VAR_TYPE_NUMBER
+			argument.Type = script.VAR_TYPE_NUMBER
 		case "(String)":
-			argument.Type = VAR_TYPE_STRING
+			argument.Type = script.VAR_TYPE_STRING
 		case "[Optional]":
 			argument.IsOptional = true
 		default:
@@ -590,30 +346,30 @@ func parseArgumentComment(data string) *Argument {
 }
 
 // guessVariableType try to guess variable type by value
-func guessVariableType(data string) VariableType {
+func guessVariableType(data string) script.VariableType {
 	if data == "" {
-		return VAR_TYPE_UKNOWN
+		return script.VAR_TYPE_UKNOWN
 	}
 
 	if data == "true" {
-		return VAR_TYPE_BOOLEAN
+		return script.VAR_TYPE_BOOLEAN
 	}
 
 	if numberRegExp.MatchString(data) {
-		return VAR_TYPE_NUMBER
+		return script.VAR_TYPE_NUMBER
 	}
 
-	return VAR_TYPE_STRING
+	return script.VAR_TYPE_STRING
 }
 
 // getVariableType search in comment info about variable type and
 // return data without comment and varuable type
-func getVariableType(data []string) ([]string, VariableType) {
+func getVariableType(data []string) ([]string, script.VariableType) {
 	var result []string
-	var resultType VariableType
+	var resultType script.VariableType
 
 	for _, line := range data {
-		if resultType == VAR_TYPE_UKNOWN {
+		if resultType == script.VAR_TYPE_UKNOWN {
 			if typeCommentRegExp.MatchString(line) {
 				cd := typeCommentRegExp.FindStringSubmatch(line)
 
@@ -623,13 +379,13 @@ func getVariableType(data []string) ([]string, VariableType) {
 
 				switch cd[2] {
 				case "Boolean":
-					resultType = VAR_TYPE_BOOLEAN
+					resultType = script.VAR_TYPE_BOOLEAN
 
 				case "Number":
-					resultType = VAR_TYPE_NUMBER
+					resultType = script.VAR_TYPE_NUMBER
 
 				default:
-					resultType = VAR_TYPE_STRING
+					resultType = script.VAR_TYPE_STRING
 				}
 
 				continue
@@ -640,22 +396,6 @@ func getVariableType(data []string) ([]string, VariableType) {
 	}
 
 	return getCleanData(result), resultType
-}
-
-// getTypeName return variable type name
-func getTypeName(t VariableType, mod int) string {
-	mod = mathutil.Between(mod, 0, 4)
-
-	switch t {
-	case VAR_TYPE_STRING:
-		return []string{"String", "string", "STRING", "S", "s"}[mod]
-	case VAR_TYPE_NUMBER:
-		return []string{"Number", "number", "NUMBER", "N", "n"}[mod]
-	case VAR_TYPE_BOOLEAN:
-		return []string{"Boolean", "boolean", "BOOLEAN", "B", "b"}[mod]
-	default:
-		return ""
-	}
 }
 
 // getCleanData return removes empty lines and whitespaces at the
@@ -680,26 +420,6 @@ func getCleanData(data []string) []string {
 	// at end of the line
 	for i := 0; i <= lastNonEmptyIndex; i++ {
 		result = append(result, strings.TrimRight(data[i], " "))
-	}
-
-	return result
-}
-
-// mergeDesc merge description lines to one string
-func mergeDesc(data []string) string {
-	var result string
-	var dataLen = len(data)
-
-	for index, line := range data {
-		if line == "" {
-			continue
-		}
-
-		result += line
-
-		if index < dataLen-1 {
-			result += " "
-		}
 	}
 
 	return result
