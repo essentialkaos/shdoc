@@ -29,7 +29,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.9.0"
+	VER  = "0.9.1"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -91,14 +91,10 @@ func Init() {
 		return
 	}
 
-	switch len(args) {
-	case 1:
-		process(args[0], "")
-	case 2:
-		process(args[0], args[1])
-	default:
-		showUsage()
-	}
+	process(
+		args.Get(0).Clean().String(),
+		args.Get(1).String(),
+	)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
