@@ -7,23 +7,31 @@ on:
     branches: [master]
   schedule:
     - cron: '0 14 */15 * *'
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force workflow run'
+        required: true
+        type: choice
+        options: [yes, no]
 
 permissions:
   actions: read
   contents: read
   statuses: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Go:
     name: Go
     runs-on: ubuntu-latest
 
-    env:
-      SRC_DIR: src/github.com/${{ github.repository }}
-
     strategy:
       matrix:
-        go: [ '1.18.x', '1.19.x' ]
+        go: [ '1.19.x', '1.20.x' ]
 
     steps:
       - name: Set up Go
@@ -33,19 +41,14 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          path: ${{env.SRC_DIR}}
 
       - name: Download dependencies
-        working-directory: ${{env.SRC_DIR}}
         run: make deps
 
       - name: Build binary
-        working-directory: ${{env.SRC_DIR}}
         run: make all
 
       - name: Run tests
-        working-directory: ${{env.SRC_DIR}}
         run: go test -covermode count -coverprofile cover.out ./parser ./script
 
       - name: Send coverage data
@@ -53,7 +56,6 @@ jobs:
         env:
           COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: ${{env.SRC_DIR}}
           profile: cover.out
           parallel: true
           flag-name: linux-${{ matrix.go }}
