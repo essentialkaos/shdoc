@@ -23,10 +23,10 @@
 
 #### From source
 
-Make sure you have a working Go 1.17+ workspace ([instructions](https://go.dev/doc/install)), then:
+Make sure you have a working Go 1.18+ workspace ([instructions](https://go.dev/doc/install)), then:
 
-```
-go install github.com/essentialkaos/shdoc
+```bash
+go install github.com/essentialkaos/shdoc@latest
 ```
 
 #### Prebuilt binaries
