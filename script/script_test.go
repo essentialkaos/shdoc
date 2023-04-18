@@ -90,11 +90,11 @@ func (s *ScriptSuite) TestHelpers(c *C) {
 	c.Assert(d.HasVariables(), Equals, true)
 	c.Assert(d.HasMethods(), Equals, true)
 
-	a1 := &Argument{"1", "A1", VAR_TYPE_UKNOWN, false, false}
+	a1 := &Argument{"1", "A1", VAR_TYPE_UNKNOWN, false, false}
 	a2 := &Argument{"2", "A2", VAR_TYPE_STRING, false, false}
 	a3 := &Argument{"3", "A3", VAR_TYPE_NUMBER, false, false}
 	a4 := &Argument{"4", "A4", VAR_TYPE_BOOLEAN, false, false}
-	a5 := &Argument{"*", "A5", VAR_TYPE_UKNOWN, true, true}
+	a5 := &Argument{"*", "A5", VAR_TYPE_UNKNOWN, true, true}
 
 	c.Assert(a1.TypeName(VAR_MOD_DEFAULT), Equals, "")
 	c.Assert(a2.TypeName(VAR_MOD_DEFAULT), Equals, "String")
@@ -107,7 +107,7 @@ func (s *ScriptSuite) TestHelpers(c *C) {
 	c.Assert(a3.IsNumber(), Equals, true)
 	c.Assert(a4.IsBoolean(), Equals, true)
 
-	v1 := &Variable{"1", []string{"V1", "", "D"}, VAR_TYPE_UKNOWN, "v1", 1}
+	v1 := &Variable{"1", []string{"V1", "", "D"}, VAR_TYPE_UNKNOWN, "v1", 1}
 	v2 := &Variable{"2", []string{"V2"}, VAR_TYPE_STRING, "v2", 2}
 	v3 := &Variable{"3", []string{"V3"}, VAR_TYPE_NUMBER, "v3", 3}
 	v4 := &Variable{"4", []string{"V4"}, VAR_TYPE_BOOLEAN, "v4", 4}
@@ -128,7 +128,7 @@ func (s *ScriptSuite) TestHelpers(c *C) {
 		Name: "m1",
 		Desc: []string{"M1", "", "D"},
 		Arguments: []*Argument{
-			&Argument{"1", "A1", VAR_TYPE_UKNOWN, false, false},
+			&Argument{"1", "A1", VAR_TYPE_UNKNOWN, false, false},
 		},
 		ResultCode: true,
 		ResultEcho: &Variable{"1", []string{"V1"}, VAR_TYPE_STRING, "v1", 1},

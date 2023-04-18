@@ -224,7 +224,7 @@ func parseVariableComment(name, value string, data []string) *script.Variable {
 
 	data, t := getVariableType(data)
 
-	if t == script.VAR_TYPE_UKNOWN {
+	if t == script.VAR_TYPE_UNKNOWN {
 		t = guessVariableType(value)
 	}
 
@@ -348,7 +348,7 @@ func parseArgumentComment(data string) *script.Argument {
 // guessVariableType try to guess variable type by value
 func guessVariableType(data string) script.VariableType {
 	if data == "" {
-		return script.VAR_TYPE_UKNOWN
+		return script.VAR_TYPE_UNKNOWN
 	}
 
 	if data == "true" {
@@ -369,7 +369,7 @@ func getVariableType(data []string) ([]string, script.VariableType) {
 	var resultType script.VariableType
 
 	for _, line := range data {
-		if resultType == script.VAR_TYPE_UKNOWN {
+		if resultType == script.VAR_TYPE_UNKNOWN {
 			if typeCommentRegExp.MatchString(line) {
 				cd := typeCommentRegExp.FindStringSubmatch(line)
 

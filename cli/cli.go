@@ -158,7 +158,7 @@ func printErrorsAndExit(errs []error) {
 	os.Exit(1)
 }
 
-// printErrorAndExit prints error mesage and exit with exit code 1
+// printErrorAndExit prints error message and exit with exit code 1
 func printErrorAndExit(f string, a ...interface{}) {
 	printError(f, a...)
 	os.Exit(1)
