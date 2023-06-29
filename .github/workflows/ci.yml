@@ -34,13 +34,13 @@ jobs:
         go: [ '1.19.x', '1.20.x' ]
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go }}
-
-      - name: Checkout
-        uses: actions/checkout@v3
 
       - name: Download dependencies
         run: make deps
