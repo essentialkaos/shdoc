@@ -302,7 +302,7 @@ func parseMethodComment(name string, data []string) *script.Method {
 // extractMethodDesc return description from all comment data
 func extractMethodDesc(data []string, index int) []string {
 	if len(data) <= index {
-		return getCleanData(data[:])
+		return getCleanData(data)
 	}
 
 	return getCleanData(data[:index])
