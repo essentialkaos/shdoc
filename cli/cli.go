@@ -2,7 +2,7 @@ package cli
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2022 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -14,10 +14,15 @@ import (
 	"github.com/essentialkaos/ek/v12/fmtc"
 	"github.com/essentialkaos/ek/v12/fsutil"
 	"github.com/essentialkaos/ek/v12/options"
+	"github.com/essentialkaos/ek/v12/support"
+	"github.com/essentialkaos/ek/v12/support/apps"
+	"github.com/essentialkaos/ek/v12/support/deps"
+	"github.com/essentialkaos/ek/v12/terminal/tty"
 	"github.com/essentialkaos/ek/v12/usage"
 	"github.com/essentialkaos/ek/v12/usage/completion/bash"
 	"github.com/essentialkaos/ek/v12/usage/completion/fish"
 	"github.com/essentialkaos/ek/v12/usage/completion/zsh"
+	"github.com/essentialkaos/ek/v12/usage/man"
 	"github.com/essentialkaos/ek/v12/usage/update"
 
 	"github.com/essentialkaos/shdoc/parser"
@@ -29,7 +34,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.9.0"
+	VER  = "0.9.1"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -41,7 +46,9 @@ const (
 	OPT_HELP     = "h:help"
 	OPT_VER      = "v:version"
 
-	OPT_COMPLETION = "completion"
+	OPT_VERB_VER     = "vv:verbose-version"
+	OPT_COMPLETION   = "completion"
+	OPT_GENERATE_MAN = "generate-man"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -51,57 +58,74 @@ var optMap = options.Map{
 	OPT_TEMPLATE: {Value: "html"},
 	OPT_NAME:     {},
 	OPT_NO_COLOR: {Type: options.BOOL},
-	OPT_HELP:     {Type: options.BOOL, Alias: "u:usage"},
-	OPT_VER:      {Type: options.BOOL, Alias: "ver"},
+	OPT_HELP:     {Type: options.BOOL},
+	OPT_VER:      {Type: options.MIXED},
 
-	OPT_COMPLETION: {},
+	OPT_VERB_VER:     {Type: options.BOOL},
+	OPT_COMPLETION:   {},
+	OPT_GENERATE_MAN: {Type: options.BOOL},
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// Init is main function
-func Init() {
+// Run is main application function
+func Run(gitRev string, gomod []byte) {
+	preConfigureUI()
+
 	args, errs := options.Parse(optMap)
 
 	if len(errs) != 0 {
-		fmtc.Println("Arguments parsing errors:")
-
 		for _, err := range errs {
-			fmtc.Printf("  %s\n", err.Error())
+			printError(err.Error())
 		}
 
 		os.Exit(1)
 	}
 
-	if options.Has(OPT_COMPLETION) {
-		genCompletion()
+	configureUI()
+
+	switch {
+	case options.Has(OPT_COMPLETION):
+		os.Exit(printCompletion())
+	case options.Has(OPT_GENERATE_MAN):
+		printMan()
+		os.Exit(0)
+	case options.GetB(OPT_VER):
+		genAbout(gitRev).Print(options.GetS(OPT_VER))
+		os.Exit(0)
+	case options.GetB(OPT_VERB_VER):
+		support.Collect(APP, VER).
+			WithRevision(gitRev).
+			WithDeps(deps.Extract(gomod)).
+			WithApps(apps.Bash()).
+			Print()
+		os.Exit(0)
+	case options.GetB(OPT_HELP), len(args) == 0:
+		genUsage().Print()
+		os.Exit(0)
 	}
 
-	if options.GetB(OPT_NO_COLOR) {
-		fmtc.DisableColors = true
-	}
-
-	if options.GetB(OPT_VER) {
-		showAbout()
-		return
-	}
-
-	if options.GetB(OPT_HELP) || len(args) == 0 {
-		showUsage()
-		return
-	}
-
-	switch len(args) {
-	case 1:
-		process(args[0], "")
-	case 2:
-		process(args[0], args[1])
-	default:
-		showUsage()
-	}
+	process(
+		args.Get(0).Clean().String(),
+		args.Get(1).String(),
+	)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
+
+// preConfigureUI preconfigures UI based on information about user terminal
+func preConfigureUI() {
+	if !tty.IsTTY() {
+		fmtc.DisableColors = true
+	}
+}
+
+// configureUI configures user interface
+func configureUI() {
+	if options.GetB(OPT_NO_COLOR) {
+		fmtc.DisableColors = true
+	}
+}
 
 // process starts source processing
 func process(file string, pattern string) {
@@ -162,7 +186,7 @@ func printErrorsAndExit(errs []error) {
 	os.Exit(1)
 }
 
-// printErrorAndExit prints error mesage and exit with exit code 1
+// printErrorAndExit prints error message and exit with exit code 1
 func printErrorAndExit(f string, a ...interface{}) {
 	printError(f, a...)
 	os.Exit(1)
@@ -170,9 +194,27 @@ func printErrorAndExit(f string, a ...interface{}) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// showUsage prints usage info
-func showUsage() {
-	genUsage().Render()
+// printCompletion prints completion for given shell
+func printCompletion() int {
+	info := genUsage()
+
+	switch options.GetS(OPT_COMPLETION) {
+	case "bash":
+		fmt.Print(bash.Generate(info, "shdoc"))
+	case "fish":
+		fmt.Print(fish.Generate(info, "shdoc"))
+	case "zsh":
+		fmt.Print(zsh.Generate(info, optMap, "shdoc"))
+	default:
+		return 1
+	}
+
+	return 0
+}
+
+// printMan prints man page
+func printMan() {
+	fmt.Println(man.Generate(genUsage(), genAbout("")))
 }
 
 // genUsage generates usage info
@@ -209,35 +251,24 @@ func genUsage() *usage.Info {
 	return info
 }
 
-// genCompletion generates completion for different shells
-func genCompletion() {
-	info := genUsage()
-
-	switch options.GetS(OPT_COMPLETION) {
-	case "bash":
-		fmt.Printf(bash.Generate(info, "shdoc"))
-	case "fish":
-		fmt.Printf(fish.Generate(info, "shdoc"))
-	case "zsh":
-		fmt.Printf(zsh.Generate(info, optMap, "shdoc"))
-	default:
-		os.Exit(1)
-	}
-
-	os.Exit(0)
-}
-
-// showAbout shows info about version
-func showAbout() {
+// genAbout generates info about version
+func genAbout(gitRev string) *usage.About {
 	about := &usage.About{
-		App:           APP,
-		Version:       VER,
-		Desc:          DESC,
-		Year:          2009,
-		Owner:         "ESSENTIAL KAOS",
-		License:       "Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>",
-		UpdateChecker: usage.UpdateChecker{"essentialkaos/shdoc", update.GitHubChecker},
+		App:     APP,
+		Version: VER,
+		Desc:    DESC,
+		Year:    2009,
+		Owner:   "ESSENTIAL KAOS",
+		License: "Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>",
 	}
 
-	about.Render()
+	if gitRev != "" {
+		about.Build = "git:" + gitRev
+		about.UpdateChecker = usage.UpdateChecker{
+			"essentialkaos/shdoc",
+			update.GitHubChecker,
+		}
+	}
+
+	return about
 }

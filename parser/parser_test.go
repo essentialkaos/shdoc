@@ -2,7 +2,7 @@ package parser
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2022 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -406,7 +406,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Variables[6], NotNil)
 	c.Assert(doc.Variables[6].Name, Equals, "var_7")
 	c.Assert(doc.Variables[6].Desc, DeepEquals, []string{"Variable #7 without value"})
-	c.Assert(doc.Variables[6].Type, Equals, script.VariableType(script.VAR_TYPE_UKNOWN))
+	c.Assert(doc.Variables[6].Type, Equals, script.VariableType(script.VAR_TYPE_UNKNOWN))
 	c.Assert(doc.Variables[6].Value, Equals, "")
 	c.Assert(doc.Variables[6].Line, Equals, 59)
 	c.Assert(doc.Variables[6].TypeName(0), Equals, "")
@@ -508,7 +508,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[1].Arguments[3], NotNil)
 	c.Assert(doc.Methods[1].Arguments[3].Index, Equals, "*")
 	c.Assert(doc.Methods[1].Arguments[3].Desc, Equals, "Wildcard argument")
-	c.Assert(doc.Methods[1].Arguments[3].Type, Equals, script.VariableType(script.VAR_TYPE_UKNOWN))
+	c.Assert(doc.Methods[1].Arguments[3].Type, Equals, script.VariableType(script.VAR_TYPE_UNKNOWN))
 	c.Assert(doc.Methods[1].Arguments[3].IsOptional, Equals, false)
 	c.Assert(doc.Methods[1].Arguments[3].IsWildcard, Equals, true)
 	c.Assert(doc.Methods[1].Arguments[3].TypeName(0), Equals, "")
@@ -600,7 +600,7 @@ func (s *ParseSuite) TestParsing(c *C) {
 	c.Assert(doc.Methods[6].Arguments[0], NotNil)
 	c.Assert(doc.Methods[6].Arguments[0].Index, Equals, "1")
 	c.Assert(doc.Methods[6].Arguments[0].Desc, Equals, "First argument")
-	c.Assert(doc.Methods[6].Arguments[0].Type, Equals, script.VariableType(script.VAR_TYPE_UKNOWN))
+	c.Assert(doc.Methods[6].Arguments[0].Type, Equals, script.VariableType(script.VAR_TYPE_UNKNOWN))
 	c.Assert(doc.Methods[6].Arguments[0].IsOptional, Equals, false)
 	c.Assert(doc.Methods[6].Arguments[0].IsWildcard, Equals, false)
 	c.Assert(doc.Methods[6].ResultCode, Equals, false)

@@ -2,7 +2,7 @@ package script
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2022 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -15,7 +15,7 @@ import "github.com/essentialkaos/ek/v12/mathutil"
 type VariableType uint8
 
 const (
-	VAR_TYPE_UKNOWN  VariableType = 0
+	VAR_TYPE_UNKNOWN  VariableType = 0
 	VAR_TYPE_STRING  VariableType = 1
 	VAR_TYPE_NUMBER  VariableType = 2
 	VAR_TYPE_BOOLEAN VariableType = 3
@@ -50,7 +50,7 @@ type Argument struct {
 	Desc       string       `json:"desc"`     // Desc
 	Type       VariableType `json:"type"`     // Type
 	IsOptional bool         `json:"optional"` // Optional
-	IsWildcard bool         `json:"wildcard"` // Wilcard
+	IsWildcard bool         `json:"wildcard"` // Wildcard
 }
 
 // Variable contains info about variable
@@ -173,7 +173,7 @@ func (a *Argument) IsUnknown() bool {
 		return false
 	}
 
-	return a.Type == VAR_TYPE_UKNOWN
+	return a.Type == VAR_TYPE_UNKNOWN
 }
 
 // TypeDesc return type description
@@ -218,7 +218,7 @@ func (v *Variable) IsUnknown() bool {
 		return false
 	}
 
-	return v.Type == VAR_TYPE_UKNOWN
+	return v.Type == VAR_TYPE_UNKNOWN
 }
 
 // UnitedDesc return united description string

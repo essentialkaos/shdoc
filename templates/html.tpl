@@ -149,6 +149,6 @@
 
     <!-- FOOTER -->
 
-    <div class="footer">Genereated with ❤ by <a href="https://kaos.sh/shdoc">SHDoc</a></div>
+    <div class="footer">Generated with ❤ by <a href="https://kaos.sh/shdoc">SHDoc</a></div>
   </body>
 </html>
