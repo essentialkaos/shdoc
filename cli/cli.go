@@ -34,7 +34,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.9.2"
+	VER  = "0.9.1"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -214,12 +214,7 @@ func printCompletion() int {
 
 // printMan prints man page
 func printMan() {
-	fmt.Println(
-		man.Generate(
-			genUsage(),
-			genAbout(""),
-		),
-	)
+	fmt.Println(man.Generate(genUsage(), genAbout("")))
 }
 
 // genUsage generates usage info
