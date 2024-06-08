@@ -62,33 +62,7 @@ sudo shdoc --completion=fish 1> /usr/share/fish/vendor_completions.d/shdoc.fish
 
 ### Usage
 
-```
-Usage: shdoc {options} script
-
-Options
-
-  --output, -o file      Path to output file
-  --template, -t name    Name of template
-  --name, -n name        Overwrite default name
-  --no-color, -nc        Disable colors in output
-  --help, -h             Show this help message
-  --version, -v          Show version
-
-Examples
-
-  shdoc script.sh
-  Parse shell script and show documentation in console
-
-  shdoc script.sh -t markdown -o my_script.md
-  Parse shell script and render documentation to markdown file
-
-  shdoc script.sh -t /path/to/template.tpl -o my_script.ext
-  Parse shell script and render documentation with given template
-
-  shdoc script.sh myFunction
-  Parse shell script and show documentation for some constant, variable or method
-
-```
+<img src=".github/images/usage.svg" />
 
 ### Test & Coverage Status
 
