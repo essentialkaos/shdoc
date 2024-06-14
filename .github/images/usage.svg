@@ -54,7 +54,7 @@
 
   <text x="50%" y="24" text-anchor="middle"><tspan class="terminal">Terminal</tspan></text>
 
-  <text x="12" y="60"><tspan class="bold">Usage:</tspan> <tspan class="">shdoc</tspan> <tspan class="g">{options}</tspan> script</text>
+  <text x="12" y="60"><tspan class="bold">Usage:</tspan> <tspan class="bold c">shdoc</tspan> <tspan class="g">{options}</tspan> script</text>
   <text x="12" y="100"><tspan class="bold">Options</tspan></text>
   <text x="12" y="140">  <tspan class="g">--output</tspan><tspan class="LG">, </tspan><tspan class="g">-o</tspan> <tspan class="LG">file</tspan> <tspan class="DG">....</tspan> Path to output file</text>
   <text x="12" y="160">  <tspan class="g">--template</tspan><tspan class="LG">, </tspan><tspan class="g">-t</tspan> <tspan class="LG">name</tspan> <tspan class="DG">..</tspan> Name of template</text>
