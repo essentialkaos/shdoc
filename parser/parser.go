@@ -57,13 +57,13 @@ func Parse(file string) (*script.Document, []error) {
 	err := fsutil.ValidatePerms("FRS", file)
 
 	if err != nil {
-		return nil, []error{fmt.Errorf("Error while file %s validation: %v", file, err)}
+		return nil, []error{fmt.Errorf("Error while script validation: %v", err)}
 	}
 
 	fd, err := os.OpenFile(file, os.O_RDONLY, 0)
 
 	if err != nil {
-		return nil, []error{fmt.Errorf("Can't open file %s: %v", file, err)}
+		return nil, []error{fmt.Errorf("Can't script: %v", err)}
 	}
 
 	defer fd.Close()
