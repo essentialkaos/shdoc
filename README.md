@@ -1,4 +1,4 @@
-<p align="center"><a href="#readme"><img src="https://gh.kaos.st/shdoc.svg"/></a></p>
+<p align="center"><a href="#readme"><img src=".github/images/card.svg"/></a></p>
 
 <p align="center">
   <a href="https://kaos.sh/w/shdoc/ci"><img src="https://kaos.sh/w/shdoc/ci.svg" alt="GitHub Actions CI Status" /></a>
@@ -6,7 +6,7 @@
   <a href="https://kaos.sh/b/shdoc"><img src="https://kaos.sh/b/a4221ea2-3758-4fb6-adf0-08cd7199960a.svg" alt="codebeat badge" /></a>
   <a href="https://kaos.sh/w/shdoc/codeql"><img src="https://kaos.sh/w/shdoc/codeql.svg" alt="GitHub Actions CodeQL Status" /></a>
   <a href="https://kaos.sh/c/shdoc"><img src="https://kaos.sh/c/shdoc.svg" alt="Coverage Status" /></a>
-  <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
+  <a href="#license"><img src=".github/images/license.svg"/></a>
 </p>
 
 <p align="center"><a href="#usage-demo">Usage Demo</a> • <a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#test--coverage-status">Test & Coverage Status</a> • <a href="#contributing">Contributing</a> • <a href="#license">License</a></p>
@@ -23,7 +23,7 @@
 
 #### From source
 
-Make sure you have a working Go 1.18+ workspace ([instructions](https://go.dev/doc/install)), then:
+Make sure you have a working Go 1.20+ workspace ([instructions](https://go.dev/doc/install)), then:
 
 ```bash
 go install github.com/essentialkaos/shdoc@latest
@@ -62,33 +62,7 @@ sudo shdoc --completion=fish 1> /usr/share/fish/vendor_completions.d/shdoc.fish
 
 ### Usage
 
-```
-Usage: shdoc {options} script
-
-Options
-
-  --output, -o file      Path to output file
-  --template, -t name    Name of template
-  --name, -n name        Overwrite default name
-  --no-color, -nc        Disable colors in output
-  --help, -h             Show this help message
-  --version, -v          Show version
-
-Examples
-
-  shdoc script.sh
-  Parse shell script and show documentation in console
-
-  shdoc script.sh -t markdown -o my_script.md
-  Parse shell script and render documentation to markdown file
-
-  shdoc script.sh -t /path/to/template.tpl -o my_script.ext
-  Parse shell script and render documentation with given template
-
-  shdoc script.sh myFunction
-  Parse shell script and show documentation for some constant, variable or method
-
-```
+<img src=".github/images/usage.svg" />
 
 ### Test & Coverage Status
 

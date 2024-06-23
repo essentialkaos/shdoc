@@ -14,6 +14,7 @@ import (
 	"github.com/essentialkaos/ek/v12/fmtc"
 	"github.com/essentialkaos/ek/v12/fsutil"
 	"github.com/essentialkaos/ek/v12/options"
+	"github.com/essentialkaos/ek/v12/pager"
 	"github.com/essentialkaos/ek/v12/support"
 	"github.com/essentialkaos/ek/v12/support/apps"
 	"github.com/essentialkaos/ek/v12/support/deps"
@@ -25,6 +26,8 @@ import (
 	"github.com/essentialkaos/ek/v12/usage/man"
 	"github.com/essentialkaos/ek/v12/usage/update"
 
+	termui "github.com/essentialkaos/ek/v12/terminal"
+
 	"github.com/essentialkaos/shdoc/parser"
 	"github.com/essentialkaos/shdoc/render/template"
 	"github.com/essentialkaos/shdoc/render/terminal"
@@ -34,7 +37,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.9.1"
+	VER  = "0.10.0"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -42,6 +45,7 @@ const (
 	OPT_OUTPUT   = "o:output"
 	OPT_TEMPLATE = "t:template"
 	OPT_NAME     = "n:name"
+	OPT_NO_PAGER = "np:no-pager"
 	OPT_NO_COLOR = "nc:no-color"
 	OPT_HELP     = "h:help"
 	OPT_VER      = "v:version"
@@ -57,6 +61,7 @@ var optMap = options.Map{
 	OPT_OUTPUT:   {},
 	OPT_TEMPLATE: {Value: "html"},
 	OPT_NAME:     {},
+	OPT_NO_PAGER: {Type: options.BOOL},
 	OPT_NO_COLOR: {Type: options.BOOL},
 	OPT_HELP:     {Type: options.BOOL},
 	OPT_VER:      {Type: options.MIXED},
@@ -74,11 +79,9 @@ func Run(gitRev string, gomod []byte) {
 
 	args, errs := options.Parse(optMap)
 
-	if len(errs) != 0 {
-		for _, err := range errs {
-			printError(err.Error())
-		}
-
+	if !errs.IsEmpty() {
+		termui.Error("Options parsing errors:")
+		termui.Error(errs.String())
 		os.Exit(1)
 	}
 
@@ -142,7 +145,7 @@ func process(file string, pattern string) {
 	}
 
 	if !doc.IsValid() {
-		printWarn("File %s doesn't contains any documentation", file)
+		termui.Warn("File %s doesn't contains any documentation", file)
 		os.Exit(2)
 	}
 
@@ -150,9 +153,18 @@ func process(file string, pattern string) {
 		doc.Title = options.GetS(OPT_NAME)
 	}
 
-	if options.GetS(OPT_OUTPUT) == "" {
+	if !options.Has(OPT_OUTPUT) {
+		if !options.GetB(OPT_NO_PAGER) {
+			if tty.IsTTY() {
+				if pager.Setup() == nil {
+					defer pager.Complete()
+				}
+			}
+		}
+
 		err = terminal.Render(doc, pattern)
 	} else {
+
 		err = template.Render(
 			doc,
 			options.GetS(OPT_TEMPLATE),
@@ -165,22 +177,12 @@ func process(file string, pattern string) {
 	}
 }
 
-// printError prints error message to console
-func printError(f string, a ...interface{}) {
-	fmtc.Fprintf(os.Stderr, "{r}"+f+"{!}\n", a...)
-}
-
-// printError prints warning message to console
-func printWarn(f string, a ...interface{}) {
-	fmtc.Fprintf(os.Stderr, "{y}"+f+"{!}\n", a...)
-}
-
 // printErrorsAndExit prints errors and exit with exit code 1
 func printErrorsAndExit(errs []error) {
-	printError("Shell script docs parsing errors:")
+	termui.Error("Shell script documentation parsing errors:")
 
 	for _, err := range errs {
-		printError("  %s", err.Error())
+		termui.Error("  %s", err.Error())
 	}
 
 	os.Exit(1)
@@ -188,7 +190,7 @@ func printErrorsAndExit(errs []error) {
 
 // printErrorAndExit prints error message and exit with exit code 1
 func printErrorAndExit(f string, a ...interface{}) {
-	printError(f, a...)
+	termui.Error(f, a...)
 	os.Exit(1)
 }
 
@@ -224,6 +226,7 @@ func genUsage() *usage.Info {
 	info.AddOption(OPT_OUTPUT, "Path to output file", "file")
 	info.AddOption(OPT_TEMPLATE, "Name of template", "name")
 	info.AddOption(OPT_NAME, "Overwrite default name", "name")
+	info.AddOption(OPT_NO_PAGER, "Disable pager for long output")
 	info.AddOption(OPT_NO_COLOR, "Disable colors in output")
 	info.AddOption(OPT_HELP, "Show this help message")
 	info.AddOption(OPT_VER, "Show version")
