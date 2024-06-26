@@ -72,7 +72,7 @@ jobs:
   SendCoverage:
     name: Send Coverage
     runs-on: ubuntu-latest
-    if: always()
+    if: success() || failure()
 
     needs: Go
 
