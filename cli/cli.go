@@ -37,7 +37,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.10.0"
+	VER  = "0.10.1"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
