@@ -191,11 +191,11 @@ func colorizeValue(value string) string {
 func getVarTypeDesc(t script.VariableType) string {
 	switch t {
 	case script.VAR_TYPE_STRING:
-		return "{b}(String){!}"
+		return "{b}({&}String{!&}){!}"
 	case script.VAR_TYPE_NUMBER:
-		return "{y}(Number){!}"
+		return "{y}({&}Number{!&}){!}"
 	case script.VAR_TYPE_BOOLEAN:
-		return "{g}(Boolean){!}"
+		return "{g}({&}Boolean{!&}){!}"
 	default:
 		return ""
 	}
