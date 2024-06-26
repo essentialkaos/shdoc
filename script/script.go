@@ -15,7 +15,7 @@ import "github.com/essentialkaos/ek/v12/mathutil"
 type VariableType uint8
 
 const (
-	VAR_TYPE_UNKNOWN  VariableType = 0
+	VAR_TYPE_UNKNOWN VariableType = 0
 	VAR_TYPE_STRING  VariableType = 1
 	VAR_TYPE_NUMBER  VariableType = 2
 	VAR_TYPE_BOOLEAN VariableType = 3
