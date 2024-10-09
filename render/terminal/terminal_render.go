@@ -11,8 +11,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/essentialkaos/ek/v12/fmtc"
-	"github.com/essentialkaos/ek/v12/fmtutil"
+	"github.com/essentialkaos/ek/v13/fmtc"
+	"github.com/essentialkaos/ek/v13/fmtutil"
 
 	"github.com/essentialkaos/shdoc/script"
 )

@@ -13,10 +13,10 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/essentialkaos/ek/v12/fmtc"
-	"github.com/essentialkaos/ek/v12/fmtutil"
-	"github.com/essentialkaos/ek/v12/fsutil"
-	"github.com/essentialkaos/ek/v12/path"
+	"github.com/essentialkaos/ek/v13/fmtc"
+	"github.com/essentialkaos/ek/v13/fmtutil"
+	"github.com/essentialkaos/ek/v13/fsutil"
+	"github.com/essentialkaos/ek/v13/path"
 
 	"github.com/essentialkaos/shdoc/script"
 )
