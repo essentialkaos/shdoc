@@ -2,7 +2,6 @@
 
 <p align="center">
   <a href="https://kaos.sh/r/shdoc"><img src="https://kaos.sh/r/shdoc.svg" alt="GoReportCard" /></a>
-  <a href="https://kaos.sh/b/shdoc"><img src="https://kaos.sh/b/a4221ea2-3758-4fb6-adf0-08cd7199960a.svg" alt="codebeat badge" /></a>
   <a href="https://kaos.sh/y/shdoc"><img src="https://kaos.sh/y/d8aa5c8aa68f43f6aa91872929a1695f.svg" alt="Codacy badge" /></a>
   <a href="https://kaos.sh/c/shdoc"><img src="https://kaos.sh/c/shdoc.svg" alt="Coverage Status" /></a>
   <br/>
