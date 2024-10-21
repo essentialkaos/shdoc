@@ -81,7 +81,7 @@ func Run(gitRev string, gomod []byte) {
 
 	if !errs.IsEmpty() {
 		termui.Error("Options parsing errors:")
-		termui.Error(errs.String())
+		termui.Error(errs.Error("- "))
 		os.Exit(1)
 	}
 
