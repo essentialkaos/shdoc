@@ -9,7 +9,6 @@ package template
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"text/template"
 
@@ -28,7 +27,7 @@ func Render(doc *script.Document, tmpl, output string) error {
 	templateFile := getPathToTemplate(tmpl)
 
 	if templateFile == "" {
-		return fmt.Errorf("Can't find template \"%s\"", tmpl)
+		return fmt.Errorf("Can't find template %q", tmpl)
 	}
 
 	t, err := readTemplate(templateFile)
@@ -85,7 +84,7 @@ func readTemplate(templateFile string) (*template.Template, error) {
 		return nil, err
 	}
 
-	templateData, err := ioutil.ReadFile(templateFile)
+	templateData, err := os.ReadFile(templateFile)
 
 	if err != nil {
 		return nil, err
@@ -100,14 +99,14 @@ func readTemplate(templateFile string) (*template.Template, error) {
 func printDocumentStats(doc *script.Document, output string) {
 	fmtutil.Separator(false, doc.Title)
 
-	fmtc.Printf("  {*}Constants:{!} %d\n", len(doc.Constants))
-	fmtc.Printf("  {*}Variables:{!} %d\n", len(doc.Variables))
-	fmtc.Printf("  {*}Methods:{!}   %d\n", len(doc.Methods))
+	fmtc.Printfn("  {*}Constants:{!} %d", len(doc.Constants))
+	fmtc.Printfn("  {*}Variables:{!} %d", len(doc.Variables))
+	fmtc.Printfn("  {*}Methods:{!}   %d", len(doc.Methods))
 
 	fmtc.NewLine()
 
-	fmtc.Printf(
-		"  {*}Output:{!} %s {s-}(%s){!}\n", output,
+	fmtc.Printfn(
+		"  {*}Output:{!} %s {s-}(%s){!}", output,
 		fmtutil.PrettySize(fsutil.GetSize(output)),
 	)
 

@@ -42,7 +42,7 @@ func renderAll(doc *script.Document) {
 		fmtutil.Separator(false, "ABOUT")
 
 		for _, l := range doc.About {
-			fmtc.Printf("  %s\n", l)
+			fmtc.Printfn("  %s", l)
 		}
 	}
 
@@ -126,19 +126,19 @@ func renderPart(doc *script.Document, pattern string) {
 
 // renderConstant prints constant info to console
 func renderConstant(c *script.Variable) {
-	fmtc.Printf("{s}%4d:{!} {m*}%s{!} {s}={!} "+colorizeValue(c.Value)+" "+getVarTypeDesc(c.Type)+"\n", c.Line, c.Name)
-	fmtc.Printf("      %s\n", c.UnitedDesc())
+	fmtc.Printfn("{s}%4d:{!} {m*}%s{!} {s}={!} "+colorizeValue(c.Value)+" "+getVarTypeDesc(c.Type), c.Line, c.Name)
+	fmtc.Printfn("      %s", c.UnitedDesc())
 }
 
 // renderMethod prints variable info to console
 func renderVariable(v *script.Variable) {
-	fmtc.Printf("{s}%4d:{!} {c*}%s{!} {s}={!} "+colorizeValue(v.Value)+" "+getVarTypeDesc(v.Type)+"\n", v.Line, v.Name)
-	fmtc.Printf("      %s\n", v.UnitedDesc())
+	fmtc.Printfn("{s}%4d:{!} {c*}%s{!} {s}={!} "+colorizeValue(v.Value)+" "+getVarTypeDesc(v.Type), v.Line, v.Name)
+	fmtc.Printfn("      %s", v.UnitedDesc())
 }
 
 // renderMethod prints method info to console
 func renderMethod(m *script.Method, showExamples bool) {
-	fmtc.Printf("{s}%4d:{!} {b*}%s{!} {s}-{!} %s\n", m.Line, m.Name, m.UnitedDesc())
+	fmtc.Printfn("{s}%4d:{!} {b*}%s{!} {s}-{!} %s", m.Line, m.Name, m.UnitedDesc())
 
 	if len(m.Arguments) != 0 {
 		fmtc.NewLine()
@@ -146,23 +146,23 @@ func renderMethod(m *script.Method, showExamples bool) {
 		for _, a := range m.Arguments {
 			switch {
 			case a.IsOptional:
-				fmtc.Printf("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type)+" {s-}[Optional]{!}\n", a.Index, a.Desc)
+				fmtc.Printfn("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type)+" {s-}[Optional]{!}", a.Index, a.Desc)
 			case a.IsWildcard:
-				fmtc.Printf("  {s-}%2s.{!} %s\n", a.Index, a.Desc)
+				fmtc.Printfn("  {s-}%2s.{!} %s", a.Index, a.Desc)
 			default:
-				fmtc.Printf("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type)+"\n", a.Index, a.Desc)
+				fmtc.Printfn("  {s-}%2s.{!} %s "+getVarTypeDesc(a.Type), a.Index, a.Desc)
 			}
 		}
 	}
 
 	if m.ResultCode {
 		fmtc.NewLine()
-		fmtc.Printf("    {*}Code:{!} 0 - ok, 1 - not ok\n")
+		fmtc.Printfn("    {*}Code:{!} 0 - ok, 1 - not ok")
 	}
 
 	if m.ResultEcho != nil {
 		fmtc.NewLine()
-		fmtc.Printf("  {*}Echo:{!} %s "+getVarTypeDesc(m.ResultEcho.Type)+"\n", strings.Join(m.ResultEcho.Desc, " "))
+		fmtc.Printfn("  {*}Echo:{!} %s "+getVarTypeDesc(m.ResultEcho.Type), strings.Join(m.ResultEcho.Desc, " "))
 	}
 
 	if m.Example != nil && showExamples {
@@ -171,7 +171,7 @@ func renderMethod(m *script.Method, showExamples bool) {
 		fmtc.NewLine()
 
 		for _, l := range m.Example {
-			fmtc.Printf("    {s}%s{!}\n", l)
+			fmtc.Printfn("    {s}%s{!}", l)
 		}
 	}
 }
