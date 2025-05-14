@@ -2,12 +2,12 @@ package script
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2025 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-import "github.com/essentialkaos/ek/v12/mathutil"
+import "github.com/essentialkaos/ek/v13/mathutil"
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -86,9 +86,7 @@ func (d *Document) IsValid() bool {
 	switch {
 	case d == nil:
 		return false
-	case d.Constants != nil && len(d.Constants) != 0,
-		d.Variables != nil && len(d.Variables) != 0,
-		d.Methods != nil && len(d.Methods) != 0:
+	case len(d.Constants) != 0, len(d.Variables) != 0, len(d.Methods) != 0:
 		return true
 	}
 

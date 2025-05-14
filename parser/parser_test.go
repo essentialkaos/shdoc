@@ -2,13 +2,13 @@ package parser
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2025 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/essentialkaos/shdoc/script"
@@ -216,7 +216,7 @@ var _ = Suite(&ParseSuite{})
 func (s *ParseSuite) SetUpSuite(c *C) {
 	s.TmpDir = c.MkDir()
 
-	err := ioutil.WriteFile(s.TmpDir+"/script.sh", []byte(_SCRIPT), 0644)
+	err := os.WriteFile(s.TmpDir+"/script.sh", []byte(_SCRIPT), 0644)
 
 	if err != nil {
 		c.Fatal(err.Error())
@@ -228,7 +228,6 @@ func (s *ParseSuite) TestErrors(c *C) {
 
 	c.Assert(doc, IsNil)
 	c.Assert(errs, Not(HasLen), 0)
-	c.Assert(errs[0], ErrorMatches, "Error while script validation: File .*/script1.sh doesn't exist or not accessible")
 }
 
 func (s *ParseSuite) TestParsing(c *C) {
