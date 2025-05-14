@@ -26,7 +26,7 @@ import (
 	"github.com/essentialkaos/ek/v13/usage/man"
 	"github.com/essentialkaos/ek/v13/usage/update"
 
-	termui "github.com/essentialkaos/ek/v13/terminal"
+	term "github.com/essentialkaos/ek/v13/terminal"
 
 	"github.com/essentialkaos/shdoc/parser"
 	"github.com/essentialkaos/shdoc/render/template"
@@ -37,7 +37,7 @@ import (
 
 const (
 	APP  = "SHDoc"
-	VER  = "0.10.1"
+	VER  = "0.10.2"
 	DESC = "Tool for viewing and exporting docs for shell scripts"
 )
 
@@ -80,8 +80,8 @@ func Run(gitRev string, gomod []byte) {
 	args, errs := options.Parse(optMap)
 
 	if !errs.IsEmpty() {
-		termui.Error("Options parsing errors:")
-		termui.Error(errs.Error("- "))
+		term.Error("Options parsing errors:")
+		term.Error(errs.Error(" - "))
 		os.Exit(1)
 	}
 
@@ -108,10 +108,15 @@ func Run(gitRev string, gomod []byte) {
 		os.Exit(0)
 	}
 
-	process(
+	err := readDocs(
 		args.Get(0).Clean().String(),
 		args.Get(1).String(),
 	)
+
+	if err != nil {
+		term.Error(err)
+		os.Exit(1)
+	}
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -130,23 +135,25 @@ func configureUI() {
 	}
 }
 
-// process starts source processing
-func process(file string, pattern string) {
+// readDocs reads the file and prints documentation from it
+func readDocs(file string, pattern string) error {
 	err := fsutil.ValidatePerms("FRS", file)
 
 	if err != nil {
-		printErrorAndExit(err.Error())
+		return err
 	}
 
 	doc, errs := parser.Parse(file)
 
-	if len(errs) != 0 {
-		printErrorsAndExit(errs)
+	if !errs.IsEmpty() {
+		term.Error("Shell script documentation parsing errors:")
+		term.Error(errs.Error(" - "))
+		fmtc.NewLine()
+		return fmt.Errorf("Can't parse script documentation")
 	}
 
 	if !doc.IsValid() {
-		termui.Warn("File %s doesn't contains any documentation", file)
-		os.Exit(2)
+		return fmt.Errorf("File %s doesn't contains any documentation", file)
 	}
 
 	if options.GetS(OPT_NAME) != "" {
@@ -172,26 +179,7 @@ func process(file string, pattern string) {
 		)
 	}
 
-	if err != nil {
-		printErrorAndExit(err.Error())
-	}
-}
-
-// printErrorsAndExit prints errors and exit with exit code 1
-func printErrorsAndExit(errs []error) {
-	termui.Error("Shell script documentation parsing errors:")
-
-	for _, err := range errs {
-		termui.Error("  %s", err.Error())
-	}
-
-	os.Exit(1)
-}
-
-// printErrorAndExit prints error message and exit with exit code 1
-func printErrorAndExit(f string, a ...interface{}) {
-	termui.Error(f, a...)
-	os.Exit(1)
+	return err
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //

@@ -14,10 +14,11 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 
+	"github.com/essentialkaos/ek/v13/errors"
 	"github.com/essentialkaos/ek/v13/fsutil"
-	"github.com/essentialkaos/ek/v13/sliceutil"
 	"github.com/essentialkaos/ek/v13/strutil"
 
 	"github.com/essentialkaos/shdoc/script"
@@ -53,17 +54,17 @@ var ignoreTags = []string{"private", "PRIVATE", "-"}
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 // Parse method parse given file and return document struct and slice with errors
-func Parse(file string) (*script.Document, []error) {
+func Parse(file string) (*script.Document, errors.Errors) {
 	err := fsutil.ValidatePerms("FRS", file)
 
 	if err != nil {
-		return nil, []error{fmt.Errorf("Error while script validation: %v", err)}
+		return nil, errors.Errors{fmt.Errorf("Error while script validation: %v", err)}
 	}
 
 	fd, err := os.OpenFile(file, os.O_RDONLY, 0)
 
 	if err != nil {
-		return nil, []error{fmt.Errorf("Can't script: %v", err)}
+		return nil, errors.Errors{fmt.Errorf("Can't script: %v", err)}
 	}
 
 	defer fd.Close()
@@ -73,8 +74,8 @@ func Parse(file string) (*script.Document, []error) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
-// readData read data
-func readData(file string, reader io.Reader) (*script.Document, []error) {
+// readData reads file data
+func readData(file string, reader io.Reader) (*script.Document, errors.Errors) {
 	scanner := bufio.NewScanner(reader)
 
 	var buffer []string
@@ -187,7 +188,7 @@ func readData(file string, reader io.Reader) (*script.Document, []error) {
 		}
 	}
 
-	return doc, []error{}
+	return doc, nil
 }
 
 // parseEntity method parse entity and return type, name and value of
@@ -214,7 +215,7 @@ func parseEntity(data string) (EntityType, string, string) {
 // parseVariableComment method parse variable comment data and return
 // variable struct
 func parseVariableComment(name, value string, data []string) *script.Variable {
-	if len(data) == 0 || sliceutil.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
+	if len(data) == 0 || slices.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 
@@ -238,7 +239,7 @@ func parseVariableComment(name, value string, data []string) *script.Variable {
 // parseMethodComment method parse method comment data and return
 // method struct
 func parseMethodComment(name string, data []string) *script.Method {
-	if len(data) == 0 || sliceutil.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
+	if len(data) == 0 || slices.Contains(ignoreTags, strings.TrimRight(data[0], " ")) {
 		return nil
 	}
 

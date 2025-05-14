@@ -8,7 +8,7 @@ package parser
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 import (
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/essentialkaos/shdoc/script"
@@ -216,7 +216,7 @@ var _ = Suite(&ParseSuite{})
 func (s *ParseSuite) SetUpSuite(c *C) {
 	s.TmpDir = c.MkDir()
 
-	err := ioutil.WriteFile(s.TmpDir+"/script.sh", []byte(_SCRIPT), 0644)
+	err := os.WriteFile(s.TmpDir+"/script.sh", []byte(_SCRIPT), 0644)
 
 	if err != nil {
 		c.Fatal(err.Error())
