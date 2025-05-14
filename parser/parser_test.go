@@ -228,7 +228,6 @@ func (s *ParseSuite) TestErrors(c *C) {
 
 	c.Assert(doc, IsNil)
 	c.Assert(errs, Not(HasLen), 0)
-	c.Assert(errs[0], ErrorMatches, "Error while script validation: File .*/script1.sh doesn't exist or not accessible")
 }
 
 func (s *ParseSuite) TestParsing(c *C) {

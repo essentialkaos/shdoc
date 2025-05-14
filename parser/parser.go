@@ -18,7 +18,6 @@ import (
 	"strings"
 
 	"github.com/essentialkaos/ek/v13/errors"
-	"github.com/essentialkaos/ek/v13/fsutil"
 	"github.com/essentialkaos/ek/v13/strutil"
 
 	"github.com/essentialkaos/shdoc/script"
@@ -55,16 +54,10 @@ var ignoreTags = []string{"private", "PRIVATE", "-"}
 
 // Parse method parse given file and return document struct and slice with errors
 func Parse(file string) (*script.Document, errors.Errors) {
-	err := fsutil.ValidatePerms("FRS", file)
-
-	if err != nil {
-		return nil, errors.Errors{fmt.Errorf("Error while script validation: %v", err)}
-	}
-
 	fd, err := os.OpenFile(file, os.O_RDONLY, 0)
 
 	if err != nil {
-		return nil, errors.Errors{fmt.Errorf("Can't script: %v", err)}
+		return nil, errors.Errors{fmt.Errorf("Can't open script file: %v", err)}
 	}
 
 	defer fd.Close()
