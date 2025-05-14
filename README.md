@@ -18,7 +18,7 @@
 
 ### Usage Demo
 
-[![demo](https://gh.kaos.st/shdoc-020.gif)](#usage-demo)
+[![demo](https://github.com/user-attachments/assets/693ae7df-63ee-42ff-af46-e95fc652fd25)](#usage-demo)
 
 ### Installation
 
@@ -74,10 +74,10 @@ sudo shdoc --completion=fish 1> /usr/share/fish/vendor_completions.d/shdoc.fish
 
 ### Contributing
 
-Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/contributing-guidelines#contributing-guidelines).
+Before contributing to this project please read our [Contributing Guidelines](https://github.com/essentialkaos/.github/blob/master/CONTRIBUTING.md).
 
 ### License
 
 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
-<p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.st/ekgh.svg"/></a></p>
+<p align="center"><a href="https://kaos.dev"><img src="https://raw.githubusercontent.com/essentialkaos/.github/refs/heads/master/images/ekgh.svg"/></a></p>
