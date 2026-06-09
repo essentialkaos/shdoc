@@ -34,7 +34,7 @@ go install github.com/essentialkaos/shdoc@latest
 
 You can download prebuilt binaries for Linux and macOS from [EK Apps Repository](https://apps.kaos.st/shdoc/latest).
 
-To install the latest prebuilt version of bibop, do:
+To install the latest prebuilt version of `shdoc`, do:
 
 ```bash
 bash <(curl -fsSL https://apps.kaos.st/get) shdoc
