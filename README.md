@@ -1,7 +1,6 @@
 <p align="center"><a href="#readme"><img src=".github/images/card.svg"/></a></p>
 
 <p align="center">
-  <a href="https://kaos.sh/r/shdoc"><img src="https://goreportcard.com/badge/github.com/essentialkaos/shdoc" alt="GoReportCard" /></a>
   <a href="https://kaos.sh/y/shdoc"><img src="https://app.codacy.com/project/badge/Grade/d8aa5c8aa68f43f6aa91872929a1695f" alt="Codacy badge" /></a>
   <a href="https://kaos.sh/c/shdoc"><img src="https://coveralls.io/repos/github/essentialkaos/shdoc/badge.svg" alt="Coverage Status" /></a>
   <br/>
